@@ -1,0 +1,15 @@
+type         = process
+command      = /usr/bin/podman run --replace --pull=newer \
+	--name blocky-tailscale \
+	-p 127.0.0.1:16932:16932 \
+	-v /home/ebrahim/containers/blocky/tailscale-hosts:/app \
+	-v /home/ebrahim/containers/headscale/data:/headscale:ro \
+	-w /app \
+	docker.io/oven/bun:alpine \
+	sh -lc "bun install && bun run start"
+run-as       = ebrahim
+restart      = false
+depends-on   = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

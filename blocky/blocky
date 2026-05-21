@@ -1,0 +1,8 @@
+type       = process
+command    = /home/ebrahim/containers/blocky/start-blocky
+run-as     = ebrahim
+restart    = false
+depends-on = tailscale-client
+
+log-type        = buffer
+log-buffer-size = 65536

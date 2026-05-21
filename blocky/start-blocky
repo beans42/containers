@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+while ! /usr/bin/ip -4 addr show dev tailscale0 2>/dev/null | /usr/bin/grep -q '100\.64\.0\.2/'; do
+	/usr/bin/sleep 0.2
+done
+/usr/bin/sleep 1
+
+exec /usr/bin/podman run --replace --pull=newer \
+	--name blocky \
+	--network=slirp4netns:allow_host_loopback=true,port_handler=slirp4netns \
+	-p 100.64.0.2:53:53 \
+	-p 100.64.0.2:53:53/udp \
+	-v /home/ebrahim/containers/blocky/config.yml:/app/config.yml:ro \
+	-v /home/ebrahim/containers/blocky/additional_deny.txt:/app/additional_deny.txt:ro \
+	-v /home/ebrahim/containers/blocky/additional_allow.txt:/app/additional_allow.txt:ro \
+	-v /home/ebrahim/containers/blocky/logs:/logs:U \
+	docker.io/spx01/blocky

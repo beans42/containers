@@ -1,0 +1,8 @@
+type       = process
+command    = /usr/bin/podman system service --time=0 unix:///home/ebrahim/containers/docker-socket/podman.sock
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

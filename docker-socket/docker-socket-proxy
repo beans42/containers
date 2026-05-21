@@ -1,0 +1,16 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name docker-socket-proxy \
+	-p 127.0.0.1:58857:2375 \
+	-e CONTAINERS=1 \
+	-e INFO=1 \
+	-e POST=0 \
+	-v /home/ebrahim/containers/docker-socket/podman.sock:/var/run/docker.sock:ro \
+	docker.io/tecnativa/docker-socket-proxy:latest
+rlimit-nofile = 16384:16384
+run-as     = ebrahim
+restart    = false
+depends-on = podman-system-service
+
+log-type        = buffer
+log-buffer-size = 65536

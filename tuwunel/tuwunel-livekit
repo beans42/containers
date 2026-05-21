@@ -1,0 +1,14 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name tuwunel-livekit \
+	--network host \
+	--env-file /home/ebrahim/containers/tuwunel/livekit.env \
+	-v /home/ebrahim/containers/tuwunel/livekit.yaml:/etc/livekit.yaml:ro \
+	docker.io/livekit/livekit-server \
+	--config /etc/livekit.yaml
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

@@ -1,0 +1,24 @@
+[global]
+server_name = "ebra.dev"
+address = ["0.0.0.0"]
+port = 8008
+turn_uris = [
+  "turn:chat-api.ebra.dev:3479?transport=udp",
+  "turn:chat-api.ebra.dev:3479?transport=tcp",
+  "turns:chat-api.ebra.dev:5350?transport=tcp"
+]
+turn_secret_file = "/var/turn_secret"
+
+[global.well_known]
+client = "https://chat.ebra.dev"
+
+[[global.identity_provider]]
+brand = "pocketid"
+name = "Pocket ID"
+
+client_id = "8d150612-4361-4c57-9d70-6a79b05f65f6"
+client_secret_file = "/var/client_secret"
+issuer_url = "https://auth.ebra.dev"
+callback_url = "https://chat.ebra.dev/_matrix/client/unstable/login/sso/callback/8d150612-4361-4c57-9d70-6a79b05f65f6"
+scope = ["openid", "profile", "email"]
+userid_claims = ["preferred_username", "sub"]

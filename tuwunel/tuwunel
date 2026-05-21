@@ -1,0 +1,16 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name tuwunel \
+	-p 127.0.0.1:64565:8008 \
+	-v /home/ebrahim/containers/tuwunel/db:/var/lib/tuwunel \
+	-v /home/ebrahim/containers/tuwunel/turn_secret:/var/turn_secret:ro \
+	-v /home/ebrahim/containers/tuwunel/client_secret:/var/client_secret:ro \
+	-v /home/ebrahim/containers/tuwunel/tuwunel.toml:/etc/tuwunel/tuwunel.toml:ro \
+	-e TUWUNEL_CONFIG=/etc/tuwunel/tuwunel.toml \
+	docker.io/jevolk/tuwunel:main-release-all-x86_64-v3-linux-gnu
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

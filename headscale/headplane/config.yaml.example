@@ -1,0 +1,39 @@
+server:
+  host: "0.0.0.0"
+  port: 3000
+  base_url: "https://headscale.ebra.dev"
+  cookie_secret_path: "/var/lib/headplane/cookie_secret"
+  cookie_secure: true
+  cookie_max_age: 86400 # 1 day
+  cookie_domain: "headscale.ebra.dev"
+  data_path: "/var/lib/headplane"
+headscale:
+  url: "https://headscale.ebra.dev"
+  public_url: "https://headscale.ebra.dev"
+  config_path: "/etc/headscale/config.yaml"
+  config_strict: true
+  dns_records_path: "/etc/headscale/dns_records.json"
+  api_key_path: "/var/lib/headplane/headscale_api_key"
+integration:
+  agent:
+    enabled: true
+    pre_authkey: "PREAUTH_KEY_HERE"
+  docker:
+    enabled: true
+    container_label: "me.tale.headplane.target=headscale"
+    socket: "tcp://127.0.0.1:58857"
+  kubernetes:
+    enabled: false
+    validate_manifest: true
+    pod_name: "headscale"
+  proc:
+    enabled: false
+oidc:
+  issuer: "https://auth.ebra.dev"
+  headscale_api_key_path: "/var/lib/headplane/headscale_api_key"
+  token_endpoint_auth_method: "client_secret_post"
+  client_id: "5f1dc914-87e6-4785-a967-c32af4eaaf22"
+  client_secret_path: "/var/lib/headplane/client_secret"
+  use_pkce: true
+  disable_api_key_login: true
+  scope: "openid email profile"

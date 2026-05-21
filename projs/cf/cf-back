@@ -1,0 +1,18 @@
+type         = bgprocess
+command      = /usr/bin/podman run --replace --pull=newer \
+	--name cf-back \
+	-p 127.0.0.1:20177:20177 \
+	-v /home/ebrahim/projs/cf/back:/app \
+	-v /home/ebrahim/containers/projs/cf/node_modules:/app/node_modules \
+	-w /app \
+	--detach \
+	--interactive \
+	--tty \
+	--conmon-pidfile=/home/ebrahim/containers/projs/cf/cf-back.pid \
+	docker.io/oven/bun:alpine \
+	sh -lc "bun install && bun run start"
+stop-command = /usr/bin/podman stop -t 0 cf-back
+pid-file     = /home/ebrahim/containers/projs/cf/cf-back.pid
+run-as       = ebrahim
+restart      = false
+depends-on   = network.target

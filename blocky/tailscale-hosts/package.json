@@ -1,0 +1,13 @@
+{
+	"scripts": {
+		"dev": "bun --watch index.ts",
+		"start": "NODE_ENV=production bun index.ts"
+	},
+	"dependencies": {
+		"elysia": "^1.4.24",
+		"ipaddr.js": "^2.3.0"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.3.9"
+	}
+}

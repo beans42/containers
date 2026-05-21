@@ -1,0 +1,13 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name vaultwarden \
+	-p 127.0.0.1:62297:80 \
+	--env-file /home/ebrahim/containers/vaultwarden/.env \
+	-v /home/ebrahim/containers/vaultwarden/data:/data \
+	docker.io/vaultwarden/server:alpine
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

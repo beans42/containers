@@ -1,0 +1,21 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name headscale \
+	--read-only \
+	--tmpfs /var/run/headscale \
+	-p 127.0.0.1:54624:8080 \
+	-p 127.0.0.1:52359:50443 \
+	-p 3480:3480/udp \
+	-v /home/ebrahim/containers/headscale/config.yaml:/etc/headscale/config.yaml \
+	-v /home/ebrahim/containers/headscale/dns_records.json:/etc/headscale/dns_records.json \
+	-v /home/ebrahim/containers/headscale/data:/var/lib/headscale \
+	-l me.tale.headplane.target=headscale \
+	docker.io/headscale/headscale:v0.28 \
+	serve
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+depends-on = pocketid
+
+log-type        = buffer
+log-buffer-size = 65536

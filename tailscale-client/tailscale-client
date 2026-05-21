@@ -1,0 +1,20 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name tailscale-client \
+	--network host \
+	--device /dev/net/tun \
+	--cap-add NET_ADMIN \
+	--cap-add NET_RAW \
+	-v /home/ebrahim/containers/tailscale-client/data:/var/lib/tailscale \
+	-e TS_STATE_DIR=/var/lib/tailscale \
+	-e TS_USERSPACE=false \
+	-e TS_AUTH_ONCE=true \
+	-e TS_HOSTNAME=peer-vps1 \
+	--env-file /home/ebrahim/containers/tailscale-client/.env \
+	-e TS_EXTRA_ARGS="--login-server=https://headscale.ebra.dev --advertise-exit-node" \
+	docker.io/tailscale/tailscale:latest
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

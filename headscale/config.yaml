@@ -1,0 +1,98 @@
+---
+server_url: https://headscale.ebra.dev
+listen_addr: 0.0.0.0:8080
+metrics_listen_addr: ""
+grpc_listen_addr: 0.0.0.0:50443
+grpc_allow_insecure: true
+
+noise:
+  private_key_path: /var/lib/headscale/noise_private.key
+
+prefixes:
+  v4: 100.64.0.0/24
+  v6: fd7a:115c:a1e0::/48
+  allocation: sequential
+
+derp:
+  server:
+    enabled: true
+
+    region_id: 999
+    region_code: "headscale"
+    region_name: "Headscale Embedded DERP"
+
+    verify_clients: true
+    stun_listen_addr: "0.0.0.0:3480"
+    private_key_path: /var/lib/headscale/derp_server_private.key
+    automatically_add_embedded_derp_region: true
+
+    ipv4: 152.53.167.145
+    ipv6: 2a0a:4cc0:2000:9c0b::1
+
+  urls: []
+  paths: []
+  auto_update_enabled: true
+  update_frequency: 3h
+
+disable_check_updates: false
+
+ephemeral_node_inactivity_timeout: 30m
+
+database:
+  type: sqlite
+  debug: false
+  gorm:
+    prepare_stmt: true
+    parameterized_queries: true
+    skip_err_record_not_found: true
+    slow_threshold: 1000
+  sqlite:
+    path: /var/lib/headscale/db.sqlite
+    write_ahead_log: true
+    wal_autocheckpoint: 1000
+
+acme_url: https://acme-v02.api.letsencrypt.org/directory
+acme_email: ""
+tls_letsencrypt_hostname: ""
+tls_letsencrypt_cache_dir: /var/lib/headscale/cache
+tls_letsencrypt_challenge_type: HTTP-01
+tls_letsencrypt_listen: ":http"
+
+tls_cert_path: ""
+tls_key_path: ""
+
+log:
+  level: info
+  format: text
+
+policy:
+  mode: database
+
+dns:
+  magic_dns: true
+  base_domain: ebra.devices
+  override_local_dns: true
+  nameservers:
+    global: ['100.64.0.2']
+    split: {}
+  search_domains: [ 'ebra.dev' ]
+  extra_records_path: "/etc/headscale/dns_records.json"
+
+unix_socket: /var/run/headscale/headscale.sock
+unix_socket_permission: "0770"
+
+logtail:
+  enabled: false
+
+randomize_client_port: false
+
+taildrop:
+  enabled: true
+
+oidc:
+  issuer: "https://auth.ebra.dev"
+  client_id: "5f1dc914-87e6-4785-a967-c32af4eaaf22"
+  client_secret_path: /var/lib/headscale/oidc_client_secret
+  scope: [ "openid", "profile", "email" ]
+  pkce:
+    enabled: true

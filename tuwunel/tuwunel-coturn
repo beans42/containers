@@ -1,0 +1,19 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name tuwunel-coturn \
+	-p 3479:3479/udp \
+	-p 3479:3479/tcp \
+	-p 5350:5350/tcp \
+	-p 13000-15999:13000-15999/udp \
+	-v /home/ebrahim/containers/tuwunel/turnserver.conf:/etc/coturn/turnserver.conf:ro \
+	-v /home/ebrahim/containers/tuwunel/turn_secret:/var/turn_secret:ro \
+	-v /home/ebrahim/containers/caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/wildcard_.ebra.dev:/etc/coturn/certs:ro \
+	--entrypoint /bin/sh \
+	docker.io/coturn/coturn:alpine \
+	-ec "exec turnserver -c /etc/coturn/turnserver.conf --external-ip=\"$$(detect-external-ip)\" --static-auth-secret \"$$COTURN_STATIC_AUTH_SECRET\""
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

@@ -1,0 +1,16 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name pocketid \
+	-p 127.0.0.1:18467:1411 \
+	-e APP_URL=https://auth.ebra.dev \
+	-e TRUST_PROXY=true \
+	-e ENCRYPTION_KEY_FILE=/secrets/encryption_key \
+	-v /home/ebrahim/containers/pocketid/secrets:/secrets \
+	-v /home/ebrahim/containers/pocketid/data:/app/data \
+	ghcr.io/pocket-id/pocket-id:v2
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

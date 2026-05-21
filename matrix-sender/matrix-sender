@@ -1,0 +1,14 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name matrix-sender \
+	-p 127.0.0.1:52498:8080 \
+	-v /home/ebrahim/containers/matrix-sender:/app \
+	-w /app \
+	docker.io/oven/bun:debian \
+	sh -lc "bun install && bun run start"
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

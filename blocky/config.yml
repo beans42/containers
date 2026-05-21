@@ -1,0 +1,45 @@
+ports:
+  dns: 53
+
+upstreams:
+  groups:
+    default:
+      - https://cloudflare-dns.com/dns-query
+      - https://dns.google/dns-query
+
+blocking:
+  denylists:
+    ads:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/popupads.txt
+      - /app/additional_deny.txt
+  allowlists:
+    ads:
+      - https://raw.githubusercontent.com/anudeepND/whitelist/refs/heads/master/domains/whitelist.txt
+      - /app/additional_allow.txt
+  clientGroupsBlock:
+    default:
+      - ads
+
+clientLookup:
+  clients:
+    pc:
+      - 100.64.0.4
+    mba:
+      - 100.64.0.5
+    bean:
+      - 100.64.0.6
+
+queryLog:
+  type: csv
+  target: /logs
+  logRetentionDays: 7
+  flushInterval: 30s
+
+hostsFile:
+  sources:
+    - http://10.0.2.2:16932/hosts
+  hostsTTL: 5m
+  loading:
+    strategy: fast
+    refreshPeriod: 1m

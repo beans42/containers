@@ -1,0 +1,131 @@
+{
+	auto_https disable_redirects
+}
+
+(protected) {
+	route {args[0]} {
+		forward_auth 10.0.2.2:19491 {
+			uri /api/auth/caddy
+			copy_headers Remote-User Remote-Name Remote-Email Remote-Groups
+		}
+		reverse_proxy {args[1:]}
+	}
+}
+
+*.ebra.dev {
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+	}
+	log {
+		output file /var/log/access.log
+		format console
+	}
+
+	@pc-pub host pc-pub.ebra.dev
+	reverse_proxy @pc-pub 100.64.0.4:3390
+
+	@mba-pub host mba-pub.ebra.dev
+	reverse_proxy @mba-pub 100.64.0.5:3390
+
+	@tinyauth host tinyauth.ebra.dev
+	reverse_proxy @tinyauth 10.0.2.2:19491
+
+	@pocketid host auth.ebra.dev
+	reverse_proxy @pocketid 10.0.2.2:18467
+
+	@widgets host widgets.ebra.dev
+	reverse_proxy @widgets 10.0.2.2:26281
+
+	@wealthgate host wealthgate-api.ebra.dev
+	reverse_proxy @wealthgate 10.0.2.2:15647
+
+	@orion host orion-api.ebra.dev
+	reverse_proxy @orion 10.0.2.2:9010
+
+	@cf host cf-api.ebra.dev
+	import protected @cf 10.0.2.2:20177
+	@cf-front host cf-front.ebra.dev
+	reverse_proxy @cf-front 10.0.2.2:3390
+
+	@cash host cash-api.ebra.dev
+	@cash_book1_bypass {
+		host cash-api.ebra.dev
+		path /basicbalance/Book1.csv
+		query auth={env.CSV_AUTH_TOKEN}
+	}
+	route @cash {
+		handle @cash_book1_bypass {
+			reverse_proxy 10.0.2.2:20077 {
+				header_up -auth
+			}
+		}
+		handle {
+			forward_auth 10.0.2.2:19491 {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Name Remote-Email Remote-Groups
+			}
+			reverse_proxy 10.0.2.2:20077
+		}
+	}
+	@cash-front host cash-front.ebra.dev
+	reverse_proxy @cash-front 10.0.2.2:3390
+
+	@chat host chat.ebra.dev
+	reverse_proxy @chat 10.0.2.2:64565
+	@chat-livekit host chat-livekit.ebra.dev
+	route @chat-livekit {
+		handle_path /livekit/jwt* {
+			reverse_proxy 10.0.2.2:60356
+		}
+		handle_path /livekit/sfu* {
+			reverse_proxy 10.0.2.2:64531
+		}
+	}
+
+	@matrix-sender {
+		host matrix-sender.ebra.dev
+		header Auth {env.MATRIX_SENDER_AUTH_TOKEN}
+	}
+	reverse_proxy @matrix-sender 10.0.2.2:52498
+
+	@vaultwarden host vaultwarden.ebra.dev
+	reverse_proxy @vaultwarden 10.0.2.2:62297 {
+		header_up X-Real-IP {remote_host}
+	}
+	
+	@glance host glance.ebra.dev
+	import protected @glance 10.0.2.2:50734
+
+	@hs host headscale.ebra.dev
+	route @hs {
+		@headplane path /admin*
+		reverse_proxy @headplane 10.0.2.2:56977
+
+		@api path /api/*
+		handle @api {
+			@preflight method OPTIONS
+			handle @preflight {
+				header Access-Control-Allow-Origin "*"
+				header Access-Control-Allow-Methods "GET"
+				header Access-Control-Allow-Headers "Authorization, Content-Type, Accept"
+				header Access-Control-Max-Age "86400"
+				respond "" 204
+			}
+			header {
+				Access-Control-Allow-Origin "*"
+				Access-Control-Expose-Headers "Content-Length, Content-Type"
+				Vary "Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+			}
+			reverse_proxy 10.0.2.2:54624
+		}
+
+		handle {
+			reverse_proxy 10.0.2.2:54624
+		}
+	}
+	@headscale-api host headscale-grpc.ebra.dev
+	reverse_proxy @headscale-api h2c://10.0.2.2:52359
+	
+	@jellyfin host jellyfin.ebra.dev
+	import protected @jellyfin 100.64.0.3:8096
+}

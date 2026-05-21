@@ -1,0 +1,15 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name cash-back \
+	-p 127.0.0.1:20077:20077 \
+	-v /home/ebrahim/projs/cash/back:/app \
+	-v /home/ebrahim/containers/projs/cash/node_modules:/app/node_modules \
+	-w /app \
+	docker.io/oven/bun:alpine \
+	sh -lc "bun install && bun run start"
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

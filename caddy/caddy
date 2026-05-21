@@ -1,0 +1,17 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name caddy \
+	--network=slirp4netns:allow_host_loopback=true,port_handler=slirp4netns \
+	-p 443:443 \
+	-p 443:443/udp \
+	--env-file /home/ebrahim/containers/caddy/.env \
+	-v /home/ebrahim/containers/caddy/conf:/etc/caddy \
+	-v /home/ebrahim/containers/caddy/data:/data \
+	-v /home/ebrahim/containers/caddy/log:/var/log \
+	localhost/caddy-cloudflare:local
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

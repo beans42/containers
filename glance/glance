@@ -1,0 +1,15 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name glance \
+	-p 127.0.0.1:50734:8080 \
+	-v /home/ebrahim/containers/glance/config:/app/config \
+	-v /home/ebrahim/containers/glance/assets:/app/assets \
+	-v /etc/localtime:/etc/localtime:ro \
+	--env-file=/home/ebrahim/containers/glance/.env \
+	docker.io/glanceapp/glance:latest
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536
