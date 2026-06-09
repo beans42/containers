@@ -1,0 +1,14 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name rybbit-client \
+	-p 127.0.0.1:52363:3002 \
+	--env-file /home/ebrahim/containers/rybbit/env/client.env \
+	-e NODE_ENV=production \
+	ghcr.io/rybbit-io/rybbit-client:latest
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+depends-on = rybbit-backend
+
+log-type        = buffer
+log-buffer-size = 65536

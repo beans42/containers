@@ -70,6 +70,19 @@
 	@cash-front host cash-front.ebra.dev
 	reverse_proxy @cash-front 10.0.2.2:3390
 
+	@rybbit host rybbit.ebra.dev
+	route @rybbit {
+		@rybbit-api path /api /api/*
+		handle @rybbit-api {
+			reverse_proxy 10.0.2.2:55401 {
+				header_up X-Real-IP {remote_host}
+			}
+		}
+		handle {
+			reverse_proxy 10.0.2.2:52363
+		}
+	}
+
 	@chat host chat.ebra.dev
 	reverse_proxy @chat 10.0.2.2:64565
 	@chat-livekit host chat-livekit.ebra.dev

@@ -1,0 +1,11 @@
+type       = process
+command    = /usr/bin/bash /home/ebrahim/containers/rybbit/start-rybbit-backend
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+depends-on = rybbit-clickhouse
+depends-on = rybbit-postgres
+depends-on = rybbit-redis
+
+log-type        = buffer
+log-buffer-size = 65536

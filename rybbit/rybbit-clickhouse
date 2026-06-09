@@ -1,0 +1,14 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name rybbit-clickhouse \
+	-p 127.0.0.1:54679:8123 \
+	--env-file /home/ebrahim/containers/rybbit/env/clickhouse.env \
+	-v /home/ebrahim/containers/rybbit/data/clickhouse:/var/lib/clickhouse \
+	-v /home/ebrahim/containers/rybbit/clickhouse-config:/etc/clickhouse-server/config.d:ro \
+	docker.io/clickhouse/clickhouse-server:25.4.2
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536
