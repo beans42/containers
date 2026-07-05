@@ -1,0 +1,13 @@
+type       = process
+command    = /usr/bin/podman run --replace --pull=newer \
+	--name croc-relay \
+	-p 53889-53890:53889-53890 \
+	-e CROC_PORTS=53889,53890 \
+	--env-file /home/ebrahim/containers/croc-relay/.env \
+	docker.io/schollz/croc
+run-as     = ebrahim
+restart    = false
+depends-on = network.target
+
+log-type        = buffer
+log-buffer-size = 65536

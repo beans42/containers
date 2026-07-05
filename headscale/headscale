@@ -3,6 +3,7 @@ command    = /usr/bin/podman run --replace --pull=newer \
 	--name headscale \
 	--read-only \
 	--tmpfs /var/run/headscale \
+	--add-host=auth.ebra.dev:169.254.1.2 \
 	-p 127.0.0.1:54624:8080 \
 	-p 127.0.0.1:52359:50443 \
 	-p 3480:3480/udp \

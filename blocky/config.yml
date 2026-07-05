@@ -38,7 +38,7 @@ queryLog:
 
 hostsFile:
   sources:
-    - http://10.0.2.2:16932/hosts
+    - http://host.containers.internal:16932/hosts
   hostsTTL: 5m
   loading:
     strategy: fast

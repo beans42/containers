@@ -1,6 +1,7 @@
 type       = process
 command    = /usr/bin/podman run --replace --pull=newer \
 	--name matrix-sender \
+	--add-host=chat.ebra.dev:169.254.1.2 \
 	-p 127.0.0.1:52498:8080 \
 	-v /home/ebrahim/containers/matrix-sender:/app \
 	-w /app \
@@ -8,7 +9,8 @@ command    = /usr/bin/podman run --replace --pull=newer \
 	sh -lc "bun install && bun run start"
 run-as     = ebrahim
 restart    = false
-depends-on = network.target
+depends-on = tuwunel
+depends-on = caddy
 
 log-type        = buffer
 log-buffer-size = 65536

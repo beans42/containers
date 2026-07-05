@@ -5,7 +5,6 @@ restart    = false
 depends-on = network.target
 depends-on = rybbit-clickhouse
 depends-on = rybbit-postgres
-depends-on = rybbit-redis
 
 log-type        = buffer
 log-buffer-size = 65536

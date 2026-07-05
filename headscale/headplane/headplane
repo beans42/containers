@@ -1,7 +1,9 @@
 type       = process
 command    = /usr/bin/podman run --replace --pull=newer \
 	--name headplane \
-	--network=pasta:--map-gw,-T,58857 \
+	--add-host=headscale.ebra.dev:169.254.1.2 \
+	--add-host=auth.ebra.dev:169.254.1.2 \
+	--network pasta:--map-host-loopback,169.254.1.3 --add-host host.containers.internal:169.254.1.3 \
 	-p 127.0.0.1:56977:3000 \
 	-v /etc/localtime:/etc/localtime:ro \
 	-v /home/ebrahim/containers/headscale/headplane/config.yaml:/etc/headplane/config.yaml:ro \

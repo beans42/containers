@@ -1,6 +1,7 @@
 type       = process
 command    = /usr/bin/podman run --replace --pull=newer \
 	--name tuwunel \
+	--add-host=auth.ebra.dev:169.254.1.2 \
 	-p 127.0.0.1:64565:8008 \
 	-v /home/ebrahim/containers/tuwunel/db:/var/lib/tuwunel \
 	-v /home/ebrahim/containers/tuwunel/turn_secret:/var/turn_secret:ro \

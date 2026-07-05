@@ -9,22 +9,18 @@ wait_for_port() {
 	done
 }
 
-# Backend talks to the data containers through their localhost host bindings.
 wait_for_port 54679
 wait_for_port 52721
-wait_for_port 51253
 
 exec /usr/bin/podman run --replace --pull=newer \
 	--name rybbit-backend \
+	--network pasta:--map-host-loopback,169.254.1.3 --add-host host.containers.internal:169.254.1.3 \
 	-p 127.0.0.1:55401:3001 \
+	-e NODE_ENV=production \
 	--env-file /home/ebrahim/containers/rybbit/env/clickhouse.env \
 	--env-file /home/ebrahim/containers/rybbit/env/postgres.env \
-	--env-file /home/ebrahim/containers/rybbit/env/redis.env \
 	--env-file /home/ebrahim/containers/rybbit/env/backend.env \
-	-e NODE_ENV=production \
 	-e CLICKHOUSE_HOST=http://host.containers.internal:54679 \
 	-e POSTGRES_HOST=host.containers.internal \
 	-e POSTGRES_PORT=52721 \
-	-e REDIS_HOST=host.containers.internal \
-	-e REDIS_PORT=51253 \
 	ghcr.io/rybbit-io/rybbit-backend:latest
