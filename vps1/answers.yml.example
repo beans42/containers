@@ -2,7 +2,7 @@ hostname: vps1
 base_domain: ebra.dev
 public_ipv4: 152.53.167.145
 public_ipv6: 2a0a:4cc0:2000:9c0b::1
-ssh_authorized_key: ssh-ed25519 AAAAC3NzaC1lZDI1...
+ssh_authorized_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICADuTaD1i54A/489uTWBSbh3RIo92DPVh8MZ2cGRGF3
 containers_git_repo: https://github.com/beans42/containers.git
 
 headscale_domain: ebra.devices
