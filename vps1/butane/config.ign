@@ -13,6 +13,28 @@
     ]
   },
   "storage": {
+    "directories": [
+      {
+        "group": {
+          "name": "core"
+        },
+        "path": "/var/home/core/.config",
+        "user": {
+          "name": "core"
+        },
+        "mode": 493
+      },
+      {
+        "group": {
+          "name": "core"
+        },
+        "path": "/var/home/core/.config/containers",
+        "user": {
+          "name": "core"
+        },
+        "mode": 493
+      }
+    ],
     "files": [
       {
         "overwrite": true,
@@ -81,12 +103,14 @@
     ],
     "links": [
       {
-        "path": "/etc/containers/systemd/users/1000",
-        "target": "/var/home/core/containers-git/vps1/services-dist/rootless"
+        "overwrite": true,
+        "path": "/etc/containers/systemd",
+        "target": "/var/home/core/containers-git/vps1/services-dist/root"
       },
       {
-        "path": "/etc/containers/systemd/tailscale-client.container",
-        "target": "/var/home/core/containers-git/vps1/services-dist/root/tailscale-client/tailscale-client.container"
+        "overwrite": true,
+        "path": "/var/home/core/.config/containers/systemd",
+        "target": "/var/home/core/containers-git/vps1/services-dist/rootless"
       }
     ]
   },
