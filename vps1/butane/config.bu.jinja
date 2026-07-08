@@ -38,14 +38,14 @@ systemd:
         Wants=network-online.target
         After=network-online.target install-host-packages.service
         ConditionPathExists=/usr/bin/git
-        ConditionPathExists=!/var/home/core/containers-git/.git
+        ConditionPathExists=!/home/core/containers-git/.git
 
         [Service]
         Type=oneshot
         User=core
         Group=core
-        WorkingDirectory=/var/home/core
-        ExecStart=/usr/bin/git clone "{{ containers_git_repo }}" /var/home/core/containers-git
+        WorkingDirectory=/home/core
+        ExecStart=/usr/bin/git clone "{{ containers_git_repo }}" /home/core/containers-git
 
         [Install]
         WantedBy=multi-user.target
