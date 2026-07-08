@@ -49,6 +49,7 @@ if [ -d "$rootless_dist" ]; then
 fi
 
 if command -v systemctl >/dev/null 2>&1; then
+	install -d -m 0755 "$repo_dir/volumes"
 	systemctl --user daemon-reload || true
 	sudo -n systemctl daemon-reload || true
 fi
