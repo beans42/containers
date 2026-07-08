@@ -20,7 +20,7 @@ Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ base_domain }} --
 
 [Service]
 TimeoutStartSec=15min
-ExecStartPre=/usr/bin/mkdir -p /home/core/containers-git/vps1/volumes/tailscale-client-data
+ExecStartPre=install -d -o core -g core -m 0755 /home/core/containers-git/vps1/volumes/tailscale-client-data
 
 [Install]
 WantedBy=multi-user.target
