@@ -21,9 +21,10 @@ Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ base_domain }} --
 
 [Service]
 TimeoutStartSec=15min
-# Headscale is a rootless unit, so start it through core's user manager.
-ExecStartPre=/usr/sbin/runuser -u core -- /usr/bin/env XDG_RUNTIME_DIR=/run/user/1000 /usr/bin/systemctl --user start headscale.service
+# Headscale and Caddy are rootless units, so start them through core's user manager.
+ExecStartPre=/usr/sbin/runuser -u core -- /usr/bin/env XDG_RUNTIME_DIR=/run/user/1000 /usr/bin/systemctl --user start headscale.service caddy.service
 ExecStartPre=install -d -o core -g core -m 0755 /home/core/containers-git/vps1/volumes/tailscale-client-data
+ExecStartPost=/bin/sh -c "until /usr/sbin/ip -4 addr show dev tailscale0 2>/dev/null | /usr/bin/grep -q '{{ tailnet_ipv4 | replace(".", "\\.") }}/'; do /usr/bin/sleep 1; done"
 
 [Install]
 WantedBy=multi-user.target
