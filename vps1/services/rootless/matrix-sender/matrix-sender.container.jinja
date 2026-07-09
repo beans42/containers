@@ -14,10 +14,11 @@ Environment="MATRIX_USERNAME={{ matrix_username }}"
 Environment="MATRIX_PASSWORD={{ matrix_password }}"
 Environment="MATRIX_RECOVERY_KEY={{ matrix_recovery_key }}"
 Volume=.:/src:ro,Z
+Volume=./entrypoint.sh:/usr/local/bin/entrypoint.sh:ro,Z
 Volume=/home/core/containers-git/vps1/volumes/matrix-sender-node:/app/node_modules:Z
 Volume=/home/core/containers-git/vps1/volumes/matrix-sender-data:/app/data:Z
 WorkingDir=/app
-Exec=sh -lc "cp -a /src/. /app && bun install && bun run start"
+Exec=/usr/local/bin/entrypoint.sh
 
 [Service]
 TimeoutStartSec=15min

@@ -7,9 +7,10 @@ Image=docker.io/oven/bun:alpine
 Pull=newer
 PublishPort=127.0.0.1:20177:20177
 Volume=/home/core/projs/cf/back:/src:ro,Z
+Volume=/home/core/containers-git/vps1/services/rootless/projs/cf/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro,Z
 Volume=/home/core/containers-git/vps1/volumes/projs-cf-node:/app/node_modules:Z
 WorkingDir=/app
-Exec=sh -lc "cp -a /src/. /app && bun install && bun run start"
+Exec=/usr/local/bin/entrypoint.sh
 
 [Service]
 TimeoutStartSec=15min
