@@ -5,7 +5,7 @@ After=rybbit-clickhouse.service rybbit-postgres.service
 
 [Container]
 ContainerName=rybbit-backend
-Image=ghcr.io/rybbit-io/rybbit-backend:latest
+Image=ghcr.io/rybbit-io/rybbit-backend
 Pull=newer
 Network=pasta:--map-host-loopback,169.254.1.3
 AddHost=host.containers.internal:169.254.1.3

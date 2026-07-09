@@ -5,7 +5,7 @@ After=tuwunel.service caddy.service
 
 [Container]
 ContainerName=matrix-sender
-Image=docker.io/oven/bun:debian
+Image=docker.io/oven/bun:slim
 Pull=newer
 AddHost=chat.{{ base_domain }}:host-gateway
 PublishPort=127.0.0.1:52498:8080

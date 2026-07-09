@@ -3,7 +3,7 @@ Description=Caddy reverse proxy
 
 [Container]
 ContainerName=caddy
-Image=ghcr.io/caddy-dns/cloudflare:latest
+Image=ghcr.io/caddy-dns/cloudflare
 Network=pasta:--map-host-loopback,169.254.1.3
 AddHost=host.containers.internal:169.254.1.3
 PublishPort=80:80

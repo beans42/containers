@@ -5,7 +5,7 @@ After=podman.socket
 
 [Container]
 ContainerName=docker-socket-proxy
-Image=docker.io/tecnativa/docker-socket-proxy:latest
+Image=docker.io/tecnativa/docker-socket-proxy
 Pull=newer
 PublishPort=127.0.0.1:58857:2375
 Environment=CONTAINERS=1

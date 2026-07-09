@@ -5,7 +5,7 @@ After=rybbit-backend.service
 
 [Container]
 ContainerName=rybbit-client
-Image=ghcr.io/rybbit-io/rybbit-client:latest
+Image=ghcr.io/rybbit-io/rybbit-client
 Pull=newer
 PublishPort=127.0.0.1:52363:3002
 EnvironmentFile=./env/client.env

@@ -5,7 +5,7 @@ After=headscale.service docker-socket-proxy.service
 
 [Container]
 ContainerName=headplane
-Image=ghcr.io/tale/headplane:latest
+Image=ghcr.io/tale/headplane
 Pull=newer
 Network=pasta:--map-host-loopback,169.254.1.3
 AddHost=host.containers.internal:169.254.1.3
