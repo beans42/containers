@@ -9,7 +9,7 @@ PublishPort=127.0.0.1:18467:1411
 Environment=APP_URL=https://auth.{{ base_domain }}
 Environment=ENCRYPTION_KEY={{ pocketid_encryption_key }}
 Environment=TRUST_PROXY=true
-Volume=/home/core/containers-git/vps1/volumes/pocketid-data:/app/data:Z
+Volume=/home/core/containers-git/vps1/volumes/pocketid-data:/app/data:U,Z
 
 [Service]
 TimeoutStartSec=15min
