@@ -4,6 +4,7 @@ Description=CF backend
 [Container]
 ContainerName=cf-back
 Image=docker.io/oven/bun:alpine
+PodmanArgs=--interactive --tty
 Pull=newer
 PublishPort=127.0.0.1:20177:20177
 Volume=/home/core/containers-git/vps1/projs/cf/back:/src:ro,Z

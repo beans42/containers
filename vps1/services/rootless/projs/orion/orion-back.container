@@ -4,6 +4,7 @@ Description=Orion backend
 [Container]
 ContainerName=orion-back
 Image=docker.io/oven/bun:alpine
+PodmanArgs=--interactive --tty
 Pull=newer
 PublishPort=127.0.0.1:9010:9010
 Volume=/home/core/containers-git/vps1/projs/orion/back:/src:ro,Z

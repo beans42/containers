@@ -4,6 +4,7 @@ Description=Wealthgate backend
 [Container]
 ContainerName=wg-back
 Image=docker.io/oven/bun:alpine
+PodmanArgs=--interactive --tty
 Pull=newer
 PublishPort=127.0.0.1:15647:15647
 Volume=/home/core/containers-git/vps1/projs/wg/back:/src:ro,Z
