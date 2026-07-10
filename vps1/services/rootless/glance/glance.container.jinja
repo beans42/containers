@@ -13,6 +13,8 @@ Volume=/usr/share/zoneinfo/America/Toronto:/etc/localtime:ro
 
 [Service]
 TimeoutStartSec=15min
+# glance exits with status 2 when stopped by podman/systemd
+SuccessExitStatus=2
 
 [Install]
 WantedBy=default.target

@@ -56,18 +56,16 @@ async function stopApp() {
 		return;
 
 	stopping = true;
+	const forceExit = setTimeout(() => process.exit(0), 3000);
 
 	try {
 		await app.stop();
-
-		const stopClient = (client as unknown as { stop?: () => unknown }).stop;
-		if (typeof stopClient === 'function')
-			await stopClient.call(client);
-
-		process.exitCode = 0;
+		clearTimeout(forceExit);
+		process.exit(0);
 	} catch (error) {
+		clearTimeout(forceExit);
 		console.error(error);
-		process.exitCode = 1;
+		process.exit(1);
 	}
 }
 

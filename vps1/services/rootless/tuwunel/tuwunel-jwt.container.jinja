@@ -17,6 +17,8 @@ Environment="LIVEKIT_SECRET={{ livekit_secret }}"
 
 [Service]
 TimeoutStartSec=15min
+# lk-jwt-service exits with status 2 when stopped by podman/systemd
+SuccessExitStatus=2
 
 [Install]
 WantedBy=default.target
