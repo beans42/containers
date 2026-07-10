@@ -39,6 +39,8 @@ Volume=./users.txt:/users.txt:ro,Z
 
 [Service]
 TimeoutStartSec=15min
+# tinyauth exits with status 2 when stopped by podman/systemd
+SuccessExitStatus=2
 
 [Install]
 WantedBy=default.target
