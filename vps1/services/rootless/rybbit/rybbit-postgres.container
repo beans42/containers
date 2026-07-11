@@ -8,6 +8,12 @@ Pull=newer
 PublishPort=127.0.0.1:52721:5432
 EnvironmentFile=./env/postgres.env
 Volume=/home/core/containers-git/vps1/volumes/rybbit-postgres:/var/lib/postgresql/data:Z
+HealthCmd=pg_isready -U frog -d analytics
+HealthInterval=3s
+HealthTimeout=5s
+HealthRetries=5
+HealthStartPeriod=10s
+Notify=healthy
 
 [Service]
 TimeoutStartSec=15min

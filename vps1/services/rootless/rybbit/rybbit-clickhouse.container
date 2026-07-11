@@ -9,6 +9,12 @@ PublishPort=127.0.0.1:54679:8123
 EnvironmentFile=./env/clickhouse.env
 Volume=/home/core/containers-git/vps1/volumes/rybbit-clickhouse:/var/lib/clickhouse:Z
 Volume=./clickhouse-config:/etc/clickhouse-server/config.d:ro,Z
+HealthCmd=wget --no-verbose --tries=1 --spider http://localhost:8123/ping
+HealthInterval=3s
+HealthTimeout=5s
+HealthRetries=5
+HealthStartPeriod=10s
+Notify=healthy
 
 [Service]
 TimeoutStartSec=15min

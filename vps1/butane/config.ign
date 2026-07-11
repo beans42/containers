@@ -84,6 +84,16 @@
         "mode": 420
       },
       {
+        "group": {
+          "name": "core"
+        },
+        "path": "/home/core/.hushlogin",
+        "user": {
+          "name": "core"
+        },
+        "mode": 420
+      },
+      {
         "path": "/var/lib/systemd/linger/core",
         "mode": 420
       }

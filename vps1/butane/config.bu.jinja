@@ -115,6 +115,12 @@ storage:
       contents:
         inline: |
           core:100000:65536
+    - path: /home/core/.hushlogin
+      mode: 0644
+      user:
+        name: core
+      group:
+        name: core
     # starts core's user systemd manager without an interactive login
     # needed for rootless Quadlets to start at boot
     - path: /var/lib/systemd/linger/core

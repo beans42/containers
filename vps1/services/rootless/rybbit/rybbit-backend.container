@@ -1,11 +1,11 @@
 [Unit]
 Description=Rybbit backend
-Requires=rybbit-clickhouse.container rybbit-postgres.container
-After=rybbit-clickhouse.container rybbit-postgres.container
+Requires=rybbit-clickhouse.container rybbit-postgres.container rybbit-redis.container
+After=rybbit-clickhouse.container rybbit-postgres.container rybbit-redis.container
 
 [Container]
 ContainerName=rybbit-backend
-Image=ghcr.io/rybbit-io/rybbit-backend
+Image=ghcr.io/rybbit-io/rybbit-backend:2.7.0
 Pull=newer
 Network=pasta:--map-host-loopback,169.254.1.3
 AddHost=host.containers.internal:169.254.1.3
@@ -13,15 +13,25 @@ PublishPort=127.0.0.1:55401:3001
 Environment=NODE_ENV=production
 EnvironmentFile=./env/clickhouse.env
 EnvironmentFile=./env/postgres.env
+EnvironmentFile=./env/redis.env
 EnvironmentFile=./env/backend.env
 Environment=CLICKHOUSE_HOST=http://host.containers.internal:54679
 Environment=POSTGRES_HOST=host.containers.internal
 Environment=POSTGRES_PORT=52721
+Environment=REDIS_HOST=host.containers.internal
+Environment=REDIS_PORT=56379
+HealthCmd=wget --no-verbose --tries=1 --spider http://127.0.0.1:3001/api/health
+HealthInterval=3s
+HealthTimeout=5s
+HealthRetries=5
+HealthStartPeriod=10s
+Notify=healthy
 
 [Service]
 TimeoutStartSec=15min
 ExecStartPre=/usr/bin/bash -c "until (echo >/dev/tcp/127.0.0.1/54679) 2>/dev/null; do sleep 1; done"
 ExecStartPre=/usr/bin/bash -c "until (echo >/dev/tcp/127.0.0.1/52721) 2>/dev/null; do sleep 1; done"
+ExecStartPre=/usr/bin/bash -c "until (echo >/dev/tcp/127.0.0.1/56379) 2>/dev/null; do sleep 1; done"
 
 [Install]
 WantedBy=default.target
