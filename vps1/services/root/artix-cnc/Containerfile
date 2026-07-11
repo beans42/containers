@@ -1,0 +1,40 @@
+FROM docker.io/artixlinux/artixlinux:base-dinit
+
+RUN pacman -Syu --noconfirm --needed \
+		base-devel \
+		openssh \
+		sudo \
+	&& pacman -Scc --noconfirm
+
+RUN groupadd -g 1000 ebrahim \
+	&& useradd -m -u 1000 -g 1000 -G wheel -s /bin/bash ebrahim \
+	&& printf '%%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n' > /etc/sudoers.d/10-wheel-nopasswd
+
+RUN printf '%s\n' \
+		'type = internal' \
+		'depends-on = sshd' \
+	> /etc/dinit.d/boot \
+	&& printf '%s\n' \
+		'type = process' \
+		'command = /usr/bin/sshd -D -e' \
+		'log-type = buffer' \
+		'log-buffer-size = 65536' \
+		> /etc/dinit.d/sshd \
+	&& install -d -m 0755 /etc/ssh/sshd_config.d \
+	&& printf '%s\n' \
+		'Port 222' \
+		'PermitRootLogin no' \
+		'PubkeyAuthentication yes' \
+		'AuthenticationMethods publickey' \
+		'PasswordAuthentication no' \
+		'KbdInteractiveAuthentication no' \
+		> /etc/ssh/sshd_config.d/10-artix-cnc.conf \
+	&& ssh-keygen -A
+
+COPY vimrc /etc/vimrc
+COPY --chown=ebrahim:ebrahim home/ /home/ebrahim/
+RUN install -d -m 0700 -o ebrahim -g ebrahim /home/ebrahim/.ssh
+
+STOPSIGNAL SIGTERM
+
+ENTRYPOINT ["/sbin/dinit", "--services-dir", "/etc/dinit.d", "boot"]

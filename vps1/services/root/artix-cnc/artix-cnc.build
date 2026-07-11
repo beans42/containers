@@ -1,0 +1,15 @@
+[Unit]
+Description=Build Artix dinit C&C image
+
+[Build]
+ImageTag=localhost/artix-cnc:latest
+File=./Containerfile
+SetWorkingDirectory=unit
+Pull=newer
+PodmanArgs=--squash
+
+[Service]
+TimeoutStartSec=30min
+
+[Install]
+WantedBy=multi-user.target

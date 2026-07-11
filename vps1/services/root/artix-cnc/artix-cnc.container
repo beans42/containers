@@ -1,0 +1,28 @@
+[Unit]
+Description=Artix dinit C&C container
+Requires=network-online.target artix-cnc.build
+After=network-online.target artix-cnc.build
+
+[Container]
+ContainerName=artix-cnc
+Image=artix-cnc.build
+Pull=never
+Network=host
+SecurityLabelDisable=true
+Volume=/:/host:ro,rslave
+Volume=/home/core/.ssh:/home/ebrahim/.ssh:ro
+Volume=/home/core/containers-git/vps1/volumes/artix-data:/data:rshared
+PodmanArgs=--pid=host
+PodmanArgs=--cgroupns=host
+PodmanArgs=--userns=host
+PodmanArgs=--privileged
+StopSignal=SIGTERM
+
+[Service]
+TimeoutStartSec=30min
+Restart=always
+RestartSec=5s
+ExecStartPre=/usr/bin/mkdir -p /home/core/containers-git/vps1/volumes/artix-data
+
+[Install]
+WantedBy=multi-user.target

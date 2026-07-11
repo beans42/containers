@@ -16,6 +16,7 @@ Environment=TS_STATE_DIR=/var/lib/tailscale
 Environment=TS_USERSPACE=false
 Environment=TS_AUTH_ONCE=true
 Environment=TS_HOSTNAME={{ hostname }}
+Environment=TS_DEBUG_FIREWALL_MODE=nftables
 Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ base_domain }} --advertise-exit-node"
 
 [Service]
