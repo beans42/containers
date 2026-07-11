@@ -8,6 +8,8 @@ noise:
 
 prefixes:
   v4: {{ headscale_ipv4_prefix }}
+  v6: fd7a:115c:a1e0::/48
+  allocation: sequential
 
 derp:
   server:
@@ -22,9 +24,28 @@ derp:
     ipv4: {{ public_ipv4 }}
     ipv6: {{ public_ipv6 }}
   urls: []
+  paths: []
+  auto_update_enabled: false
+
+disable_check_updates: false
+
+node:
+  expiry: 0
+  ephemeral:
+    inactivity_timeout: 3m
+  routes:
+    ha:
+      probe_interval: 10s
+      probe_timeout: 5s
 
 database:
   type: sqlite
+  debug: false
+  gorm:
+    prepare_stmt: true
+    parameterized_queries: true
+    skip_err_record_not_found: true
+    slow_threshold: 1000
   sqlite:
     path: /var/lib/headscale/db.sqlite
     write_ahead_log: true
@@ -39,6 +60,7 @@ dns:
   override_local_dns: true
   nameservers:
     global: ['{{ tailnet_ipv4 }}']
+    split: {}
   search_domains: [ '{{ base_domain }}' ]
   extra_records_path: "/etc/headscale/dns_records.json"
 
@@ -48,6 +70,12 @@ oidc:
   client_secret: "{{ headscale_oidc_client_secret }}"
   pkce:
     enabled: true
+
+logtail:
+  enabled: false
+
+taildrop:
+  enabled: true
 
 auto_update:
   enabled: true
