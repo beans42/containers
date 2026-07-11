@@ -2,13 +2,6 @@
 	grace_period 5s
 }
 
-http://127.0.0.1, http://localhost {
-	handle /_health {
-		log_skip
-		respond 204
-	}
-}
-
 (protected) {
 	route {args[0]} {
 		forward_auth host.containers.internal:19491 {

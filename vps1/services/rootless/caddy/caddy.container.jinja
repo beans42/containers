@@ -16,12 +16,6 @@ Environment="MATRIX_SENDER_AUTH_TOKEN={{ matrix_sender_auth_token }}"
 Volume=./conf:/etc/caddy:Z
 Volume=/home/core/containers-git/vps1/volumes/caddy-data:/data:z
 Volume=/home/core/containers-git/vps1/volumes/caddy-logs:/var/log:Z
-HealthCmd=["wget","-q","--spider","http://127.0.0.1/_health"]
-HealthInterval=15s
-HealthTimeout=3s
-HealthRetries=5
-HealthStartPeriod=10s
-Notify=healthy
 
 [Service]
 TimeoutStartSec=15min

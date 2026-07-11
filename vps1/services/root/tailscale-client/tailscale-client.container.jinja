@@ -1,7 +1,7 @@
 [Unit]
 Description=Tailscale client
-Requires=network-online.target
-After=network-online.target
+Requires=network-online.target user@1000.service
+After=network-online.target user@1000.service
 
 [Container]
 ContainerName=tailscale-client
@@ -17,17 +17,11 @@ Environment=TS_USERSPACE=false
 Environment=TS_AUTH_ONCE=true
 Environment=TS_HOSTNAME={{ hostname }}
 Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ base_domain }} --advertise-exit-node"
-Environment=TS_ENABLE_HEALTH_CHECK=true
-Environment=TS_LOCAL_ADDR_PORT=127.0.0.1:9002
-HealthCmd=["wget","-q","--spider","http://127.0.0.1:9002/healthz"]
-HealthInterval=10s
-HealthTimeout=3s
-HealthRetries=12
-HealthStartPeriod=10s
-Notify=healthy
 
 [Service]
 TimeoutStartSec=15min
+# headscale is a rootless unit, make direct starts of this rootful unit safe
+ExecStartPre=/usr/sbin/runuser -u core -- /usr/bin/env XDG_RUNTIME_DIR=/run/user/1000 /usr/bin/systemctl --user start headscale.service
 ExecStartPre=install -d -o core -g core -m 0755 /home/core/containers-git/vps1/volumes/tailscale-client-data
 
 [Install]
