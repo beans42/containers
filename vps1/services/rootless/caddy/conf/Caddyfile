@@ -32,10 +32,10 @@ http://headscale.{$BASE_DOMAIN} {
 	}
 
 	@pc-pub host pc-pub.{$BASE_DOMAIN}
-	reverse_proxy @pc-pub 100.64.0.4:3390
+	reverse_proxy @pc-pub 100.64.0.3:3390
 
 	@mba-pub host mba-pub.{$BASE_DOMAIN}
-	reverse_proxy @mba-pub 100.64.0.5:3390
+	reverse_proxy @mba-pub 100.64.0.4:3390
 
 	@tinyauth host tinyauth.{$BASE_DOMAIN}
 	reverse_proxy @tinyauth host.containers.internal:19491
@@ -135,7 +135,7 @@ http://headscale.{$BASE_DOMAIN} {
 	}
 
 	@jellyfin host jellyfin.{$BASE_DOMAIN}
-	import protected @jellyfin 100.64.0.3:8096
+	import protected @jellyfin 100.64.0.2:8096
 
 	@rybbit host heartbeat.{$BASE_DOMAIN}
 	route @rybbit {
