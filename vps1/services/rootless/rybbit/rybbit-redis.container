@@ -7,7 +7,7 @@ Image=docker.io/redis:7-alpine
 Pull=newer
 PublishPort=127.0.0.1:56379:6379
 EnvironmentFile=./env/redis.env
-Volume=/home/core/containers-git/vps1/volumes/rybbit-redis:/data:Z
+Volume=/home/core/infra-template/vps1/volumes/rybbit-redis:/data:Z
 Exec=redis-server --requirepass changeme --appendonly yes --appendfsync everysec --maxmemory-policy noeviction
 HealthCmd=redis-cli -a changeme --no-auth-warning ping
 HealthInterval=3s
@@ -18,7 +18,7 @@ Notify=healthy
 
 [Service]
 TimeoutStartSec=15min
-ExecStartPre=/usr/bin/mkdir -p /home/core/containers-git/vps1/volumes/rybbit-redis
+ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/rybbit-redis
 
 [Install]
 WantedBy=default.target

@@ -7,7 +7,7 @@ Image=docker.io/clickhouse/clickhouse-server:25.4.2
 Pull=newer
 PublishPort=127.0.0.1:54679:8123
 EnvironmentFile=./env/clickhouse.env
-Volume=/home/core/containers-git/vps1/volumes/rybbit-clickhouse:/var/lib/clickhouse:Z
+Volume=/home/core/infra-template/vps1/volumes/rybbit-clickhouse:/var/lib/clickhouse:Z
 Volume=./clickhouse-config:/etc/clickhouse-server/config.d:ro,Z
 HealthCmd=wget --no-verbose --tries=1 --spider http://localhost:8123/ping
 HealthInterval=3s
@@ -18,7 +18,7 @@ Notify=healthy
 
 [Service]
 TimeoutStartSec=15min
-ExecStartPre=/usr/bin/mkdir -p /home/core/containers-git/vps1/volumes/rybbit-clickhouse
+ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/rybbit-clickhouse
 
 [Install]
 WantedBy=default.target

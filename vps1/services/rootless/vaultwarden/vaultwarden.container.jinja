@@ -19,11 +19,11 @@ Environment=PUSH_ENABLED=true
 Environment="PUSH_INSTALLATION_ID={{ vaultwarden_push_installation_id }}"
 Environment="PUSH_INSTALLATION_KEY={{ vaultwarden_push_installation_key }}"
 Environment=SHOW_PASSWORD_HINT=false
-Volume=/home/core/containers-git/vps1/volumes/vaultwarden-data:/data:Z
+Volume=/home/core/infra-template/vps1/volumes/vaultwarden-data:/data:Z
 
 [Service]
 TimeoutStartSec=15min
-ExecStartPre=/usr/bin/mkdir -p /home/core/containers-git/vps1/volumes/vaultwarden-data
+ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/vaultwarden-data
 
 [Install]
 WantedBy=default.target

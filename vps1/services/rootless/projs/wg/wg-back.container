@@ -7,15 +7,15 @@ Image=docker.io/oven/bun:alpine
 PodmanArgs=--interactive --tty
 Pull=newer
 PublishPort=127.0.0.1:15647:15647
-Volume=/home/core/containers-git/vps1/projs/wg/back:/src:ro,Z
-Volume=/home/core/containers-git/vps1/services/rootless/projs/wg/entrypoint.sh:/usr/local/bin/entrypoint.sh:ro,Z
-Volume=/home/core/containers-git/vps1/volumes/projs-wg-node:/app/node_modules:Z
+Volume=/home/core/infra-template/vps1/projs/wg/back:/src:ro,Z
+Volume=./entrypoint.sh:/usr/local/bin/entrypoint.sh:ro,Z
+Volume=/home/core/infra-template/vps1/volumes/projs-wg-node:/app/node_modules:Z
 WorkingDir=/app
 Exec=/usr/local/bin/entrypoint.sh
 
 [Service]
 TimeoutStartSec=15min
-ExecStartPre=/usr/bin/mkdir -p /home/core/containers-git/vps1/volumes/projs-wg-node
+ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/projs-wg-node
 
 [Install]
 WantedBy=default.target

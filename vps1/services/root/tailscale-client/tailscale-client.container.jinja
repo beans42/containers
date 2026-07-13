@@ -10,7 +10,7 @@ Pull=newer
 Network=host
 AddDevice=/dev/net/tun
 AddCapability=NET_ADMIN NET_RAW
-Volume=/home/core/containers-git/vps1/volumes/tailscale-client-data:/var/lib/tailscale:Z
+Volume=/home/core/infra-template/vps1/volumes/tailscale-client-data:/var/lib/tailscale:Z
 Environment="TS_AUTHKEY={{ tailscale_auth_key }}"
 Environment=TS_STATE_DIR=/var/lib/tailscale
 Environment=TS_USERSPACE=false
@@ -23,7 +23,7 @@ Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ base_domain }} --
 TimeoutStartSec=15min
 # headscale is a rootless unit, make direct starts of this rootful unit safe
 ExecStartPre=/usr/sbin/runuser -u core -- /usr/bin/env XDG_RUNTIME_DIR=/run/user/1000 /usr/bin/systemctl --user start headscale.service
-ExecStartPre=install -d -o core -g core -m 0755 /home/core/containers-git/vps1/volumes/tailscale-client-data
+ExecStartPre=install -d -o core -g core -m 0755 /home/core/infra-template/vps1/volumes/tailscale-client-data
 
 [Install]
 WantedBy=multi-user.target
