@@ -60,18 +60,18 @@ const app = new Elysia()
 							ipv4 = ipv4 ? ipv4 : ip;
 					}
 
-					if (!ipv6) {
+					if (ipv4 && ipv6) {
+						out += `${ipv4} v4.${x.given_name}.${baseDomain}\n`;
+						out += `:: v4.${x.given_name}.${baseDomain}\n`;
+						out += `0.0.0.0 v6.${x.given_name}.${baseDomain}\n`;
+						out += `${ipv6} v6.${x.given_name}.${baseDomain}\n`;
+					} else if (ipv4 && !ipv6) {
 						out += `${ipv4} v4.${x.given_name}.${baseDomain}\n`;
 						out += `:: v4.${x.given_name}.${baseDomain}\n`;
 						out += `0.0.0.0 v6.${x.given_name}.${baseDomain}\n`;
 						out += `:: v6.${x.given_name}.${baseDomain}\n`;
-					} else if (!ipv4) {
+					} else if (!ipv4 && ipv6) {
 						out += `0.0.0.0 v4.${x.given_name}.${baseDomain}\n`;
-						out += `:: v4.${x.given_name}.${baseDomain}\n`;
-						out += `0.0.0.0 v6.${x.given_name}.${baseDomain}\n`;
-						out += `${ipv6} v6.${x.given_name}.${baseDomain}\n`;
-					} else if (ipv4 && ipv6) {
-						out += `${ipv4} v4.${x.given_name}.${baseDomain}\n`;
 						out += `:: v4.${x.given_name}.${baseDomain}\n`;
 						out += `0.0.0.0 v6.${x.given_name}.${baseDomain}\n`;
 						out += `${ipv6} v6.${x.given_name}.${baseDomain}\n`;
