@@ -46,7 +46,7 @@ sync_tree() {
 			done
 		' sh "$sync_src" "$sync_dest" {} +
 	fi
-	cp -a "$sync_src"/. "$sync_dest"/
+	cp -a --no-preserve=context "$sync_src"/. "$sync_dest"/
 }
 
 sudo_sync_tree() {
@@ -76,7 +76,7 @@ sudo_sync_tree() {
 			done
 		' sh "$sync_src" "$sync_dest" {} +
 	fi
-	sudo cp -a "$sync_src"/. "$sync_dest"/
+	sudo cp -a --no-preserve=context "$sync_src"/. "$sync_dest"/
 }
 
 {
@@ -114,7 +114,6 @@ sudo chown -R root:root "$root_quadlet_dir"
 sudo restorecon -RF "$root_quadlet_dir" 2>/dev/null || true
 
 sync_tree "$dest/rootless" "$HOME/.config/containers/systemd/${host_name}-rootless"
-restorecon -RF "$HOME/.config/containers" 2>/dev/null || true
 
 install -d -m 0755 "$host_dir/volumes"
 systemctl --user daemon-reload || true
