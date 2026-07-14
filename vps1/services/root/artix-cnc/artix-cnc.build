@@ -2,7 +2,7 @@
 Description=Build Artix dinit C&C image
 
 [Build]
-ImageTag=localhost/artix-cnc:latest
+ImageTag=localhost/cnc:latest
 File=./Containerfile
 SetWorkingDirectory=unit
 Pull=newer

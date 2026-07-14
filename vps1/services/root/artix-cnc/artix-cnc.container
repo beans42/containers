@@ -1,16 +1,16 @@
 [Unit]
 Description=Artix dinit C&C container
-Requires=network-online.target artix-cnc.build
-After=network-online.target artix-cnc.build
+Requires=network-online.target cnc.build
+After=network-online.target cnc.build
 
 [Container]
-ContainerName=artix-cnc
-Image=artix-cnc.build
+ContainerName=cnc
+Image=cnc.build
 Pull=never
 Network=host
 SecurityLabelDisable=true
 Volume=/:/host:rslave
-Volume=/home/core/infra-template/vps1/volumes/artix-data:/data:rshared
+Volume=/home/core/infra-template/vps1/volumes/cnc-data:/data:rshared
 PodmanArgs=--pid=host
 PodmanArgs=--cgroupns=host
 PodmanArgs=--userns=host
@@ -21,7 +21,7 @@ StopSignal=SIGTERM
 TimeoutStartSec=30min
 Restart=always
 RestartSec=5s
-ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/artix-data
+ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/cnc-data
 
 [Install]
 WantedBy=multi-user.target

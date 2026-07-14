@@ -40,7 +40,7 @@ RUN printf '%s\n' \
 		'AuthenticationMethods publickey' \
 		'PasswordAuthentication no' \
 		'KbdInteractiveAuthentication no' \
-		> /etc/ssh/sshd_config.d/10-artix-cnc.conf \
+		> /etc/ssh/sshd_config.d/10-cnc.conf \
 	&& ssh-keygen -A
 
 RUN install -d -m 0700 -o ebrahim -g ebrahim /home/ebrahim/.ssh
