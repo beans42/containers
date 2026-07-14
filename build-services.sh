@@ -5,8 +5,14 @@ set -eu
 
 script_path=$(realpath "$0")
 repo_dir=$(dirname "$script_path")
+
+git -C "$repo_dir" pull --ff-only
+
 host_name=$1
 host_dir="$repo_dir/$host_name"
+current_host=$(cat /etc/hostname)
+
+[ "$host_name" = "$current_host" ] || { echo "refusing to deploy $host_name on $current_host" >&2; exit 1; }
 
 [ -d "$host_dir" ] || { echo "host directory not found: $host_dir" >&2; exit 1; }
 [ -f "$repo_dir/answers.yml" ] || { echo "missing shared answers: $repo_dir/answers.yml" >&2; exit 1; }
