@@ -20,18 +20,18 @@ data_file=$(mktemp)
 dest="$host_dir/services-dist"
 
 sync_tree() {
-	src=$1
-	dest=$2
+	sync_src=$1
+	sync_dest=$2
 
-	install -d -m 0755 "$dest"
-	if [ -d "$dest" ]; then
-		find "$dest" -depth -mindepth 1 -exec sh -eu -c '
-			src=$1
-			dest=$2
+	install -d -m 0755 "$sync_dest"
+	if [ -d "$sync_dest" ]; then
+		find "$sync_dest" -depth -mindepth 1 -exec sh -eu -c '
+			sync_src=$1
+			sync_dest=$2
 			shift 2
 			for path do
-				rel=${path#"$dest"/}
-				src_path=$src/$rel
+				rel=${path#"$sync_dest"/}
+				src_path=$sync_src/$rel
 				if [ ! -e "$src_path" ] && [ ! -L "$src_path" ]; then
 					rm -rf "$path"
 					continue
@@ -44,24 +44,24 @@ sync_tree() {
 					rm -rf "$path"
 				fi
 			done
-		' sh "$src" "$dest" {} +
+		' sh "$sync_src" "$sync_dest" {} +
 	fi
-	cp -a "$src"/. "$dest"/
+	cp -a "$sync_src"/. "$sync_dest"/
 }
 
 sudo_sync_tree() {
-	src=$1
-	dest=$2
+	sync_src=$1
+	sync_dest=$2
 
-	sudo install -d -m 0755 "$dest"
-	if sudo test -d "$dest"; then
-		sudo find "$dest" -depth -mindepth 1 -exec sh -eu -c '
-			src=$1
-			dest=$2
+	sudo install -d -m 0755 "$sync_dest"
+	if sudo test -d "$sync_dest"; then
+		sudo find "$sync_dest" -depth -mindepth 1 -exec sh -eu -c '
+			sync_src=$1
+			sync_dest=$2
 			shift 2
 			for path do
-				rel=${path#"$dest"/}
-				src_path=$src/$rel
+				rel=${path#"$sync_dest"/}
+				src_path=$sync_src/$rel
 				if [ ! -e "$src_path" ] && [ ! -L "$src_path" ]; then
 					rm -rf "$path"
 					continue
@@ -74,9 +74,9 @@ sudo_sync_tree() {
 					rm -rf "$path"
 				fi
 			done
-		' sh "$src" "$dest" {} +
+		' sh "$sync_src" "$sync_dest" {} +
 	fi
-	sudo cp -a "$src"/. "$dest"/
+	sudo cp -a "$sync_src"/. "$sync_dest"/
 }
 
 {
