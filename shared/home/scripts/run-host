@@ -9,4 +9,4 @@ exec sudo nsenter -t 1 -u -i -n -p -- \
 		PATH=/usr/local/bin:/usr/bin:/usr/local/sbin \
 		XDG_RUNTIME_DIR=/run/user/1000 \
 		DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
-		/bin/bash -lc "$*"
+		"$@"

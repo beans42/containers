@@ -7,4 +7,4 @@ exec sudo nsenter -t 1 -u -i -n -p -- \
 		LOGNAME=root \
 		SHELL=/bin/bash \
 		PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/snapd/snap/bin \
-		/bin/bash -lc "$*"
+		"$@"
