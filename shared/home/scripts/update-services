@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+hostname=$(sed -n '1p' /etc/hostname | tr -d '[:space:]')
+
+git -C ~/infra-template pull --ff-only
+run-host /home/core/infra-template/build-services.sh "$hostname"

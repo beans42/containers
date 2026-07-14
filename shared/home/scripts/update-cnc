@@ -1,0 +1,24 @@
+#!/bin/sh
+
+run-host journalctl -u cnc-build -f -n 0 -o cat &
+
+sleep 0.1
+
+run-host-root systemctl --job-mode=ignore-dependencies restart cnc-build
+restart_status=$?
+
+kill "$!" 2>/dev/null
+wait "$!" 2>/dev/null
+
+if [ "$restart_status" -ne 0 ]; then
+	exit "$restart_status"
+fi
+
+printf '\nBuild succeeded. Restarting cnc will delete data. Continue? [y/N] ' >/dev/tty
+IFS= read -r answer </dev/tty
+
+case $answer in
+	y | Y | yes | YES | Yes)
+		run-host-root systemctl restart cnc
+		;;
+esac

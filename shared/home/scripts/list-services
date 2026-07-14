@@ -1,0 +1,31 @@
+#!/bin/sh
+set -eu
+
+hostname=$(sed -n '1p' /etc/hostname | tr -d '[:space:]')
+
+list_scope() {
+	scope=$1
+	dir=$2
+
+	[ -d "$dir" ] || return 0
+
+	find "$dir" -type f -name '*.container' 2>/dev/null | sort |
+	while IFS= read -r f; do
+		u=${f##*/}
+		u=${u%.container}.service
+
+		case $scope in
+			rootless)
+				a=$(run-host systemctl --user is-active "$u" 2>/dev/null || true)
+				;;
+			rootful)
+				a=$(run-host-root systemctl is-active "$u" 2>/dev/null || true)
+				;;
+		esac
+
+		printf '%-40s %s\n' "$u" "${a:-unknown}"
+	done
+}
+
+list_scope rootful "~/infra-template/$hostname/services-dist/root"
+list_scope rootless "~/infra-template/$hostname/services-dist/rootless"

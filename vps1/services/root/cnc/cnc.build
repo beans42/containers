@@ -6,7 +6,6 @@ ImageTag=localhost/cnc:latest
 File=./Containerfile
 SetWorkingDirectory=unit
 Pull=newer
-PodmanArgs=--squash
 
 [Service]
 TimeoutStartSec=30min

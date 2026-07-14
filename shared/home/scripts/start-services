@@ -1,0 +1,117 @@
+#!/bin/sh
+set -u
+
+hostname=$(sed -n '1p' /etc/hostname | tr -d '[:space:]')
+units_tmp=$(mktemp)
+done_tmp=$(mktemp)
+
+cleanup() {
+	rm -f "$units_tmp" "$done_tmp"
+}
+trap cleanup EXIT INT TERM
+
+ctl() {
+	scope=$1
+	shift
+
+	case $scope in
+		rootless)
+			run-host systemctl --user "$@"
+			;;
+		rootful)
+			run-host-root systemctl "$@"
+			;;
+	esac
+}
+
+add_units() {
+	scope=$1
+	dir=$2
+
+	[ -d "$dir" ] || return 0
+
+	find "$dir" -type f -name '*.container' 2>/dev/null | sort |
+	while IFS= read -r f; do
+		u=${f##*/}
+		u=${u%.container}.service
+
+		[ "$u" = cnc.service ] && continue
+
+		printf '%s|%s\n' "$scope" "$u"
+	done
+}
+
+progress() {
+	done_count=$1
+	total=$2
+	label=$3
+	width=30
+
+	if [ "$total" -eq 0 ]; then
+		pct=100
+		filled=$width
+	else
+		pct=$((done_count * 100 / total))
+		filled=$((done_count * width / total))
+	fi
+
+	empty=$((width - filled))
+
+	printf '\r['
+	i=0
+	while [ "$i" -lt "$filled" ]; do
+		printf '#'
+		i=$((i + 1))
+	done
+	i=0
+	while [ "$i" -lt "$empty" ]; do
+		printf '-'
+		i=$((i + 1))
+	done
+	printf '] %s/%s %s%%  %s\033[K' "$done_count" "$total" "$pct" "$label"
+}
+
+{
+	add_units rootful "~/infra-template/$hostname/services-dist/root"
+	add_units rootless "~/infra-template/$hostname/services-dist/rootless"
+} | sort -u > "$units_tmp"
+
+total=$(wc -l < "$units_tmp" | tr -d ' ')
+
+if [ "$total" -eq 0 ]; then
+	echo "no services found"
+	exit 0
+fi
+
+while IFS='|' read -r scope unit; do
+	ctl "$scope" --no-block start "$unit" >/dev/null 2>&1 || true
+done < "$units_tmp"
+
+last="queued start jobs"
+progress 0 "$total" "$last"
+
+while :; do
+	done_count=$(wc -l < "$done_tmp" | tr -d ' ')
+
+	[ "$done_count" -ge "$total" ] && break
+
+	while IFS='|' read -r scope unit; do
+		key="$scope|$unit"
+
+		grep -Fqx "$key" "$done_tmp" 2>/dev/null && continue
+
+		state=$(ctl "$scope" is-active "$unit" 2>/dev/null || true)
+
+		if [ "$state" = active ]; then
+			printf '%s\n' "$key" >> "$done_tmp"
+			last="$unit active"
+			done_count=$((done_count + 1))
+			progress "$done_count" "$total" "$last"
+		fi
+	done < "$units_tmp"
+
+	sleep 1
+done
+
+progress "$total" "$total" "$last"
+printf '\n'
