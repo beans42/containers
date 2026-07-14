@@ -6,8 +6,6 @@ set -eu
 script_path=$(realpath "$0")
 repo_dir=$(dirname "$script_path")
 
-git -C "$repo_dir" pull --ff-only
-
 host_name=$1
 host_dir="$repo_dir/$host_name"
 current_host=$(cat /etc/hostname)
@@ -20,12 +18,6 @@ current_host=$(cat /etc/hostname)
 
 data_file=$(mktemp)
 dest="$host_dir/services-dist"
-
-root_dist="$dest/root"
-rootless_dist="$dest/rootless"
-
-root_quadlet_dir="/etc/containers/systemd/${host_name}-root"
-rootless_quadlet_dir="$HOME/.config/containers/systemd/${host_name}-rootless"
 
 sync_tree() {
 	src=$1
@@ -116,19 +108,14 @@ podman run --rm --interactive \
 	' sh "$host_name"
 rm -f "$data_file" "$host_dir/services/copier.yml" "$repo_dir/shared/copier.yml"
 
-if [ -d "$root_dist" ]; then
-	sudo_sync_tree "$root_dist" "$root_quadlet_dir"
-	sudo chown -R root:root "$root_quadlet_dir"
-	sudo restorecon -RF "$root_quadlet_dir" 2>/dev/null || true
-fi
+root_quadlet_dir="/etc/containers/systemd/${host_name}-root"
+sudo_sync_tree "$dest/root" "$root_quadlet_dir"
+sudo chown -R root:root "$root_quadlet_dir"
+sudo restorecon -RF "$root_quadlet_dir" 2>/dev/null || true
 
-if [ -d "$rootless_dist" ]; then
-	sync_tree "$rootless_dist" "$rootless_quadlet_dir"
-	restorecon -RF "$HOME/.config/containers" 2>/dev/null || true
-fi
+sync_tree "$dest/rootless" "$HOME/.config/containers/systemd/${host_name}-rootless"
+restorecon -RF "$HOME/.config/containers" 2>/dev/null || true
 
-if command -v systemctl >/dev/null 2>&1; then
-	install -d -m 0755 "$host_dir/volumes"
-	systemctl --user daemon-reload || true
-	sudo -n systemctl daemon-reload || true
-fi
+install -d -m 0755 "$host_dir/volumes"
+systemctl --user daemon-reload || true
+sudo -n systemctl daemon-reload || true
