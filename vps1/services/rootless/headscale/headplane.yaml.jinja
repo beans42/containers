@@ -1,17 +1,17 @@
 server:
   host: "0.0.0.0"
   port: 3000
-  base_url: "https://headscale.{{ base_domain }}"
-  cookie_secret: "{{ headplane_cookie_secret }}"
+  base_url: "https://headscale.{{ vps1.base_domain }}"
+  cookie_secret: "{{ vps1.priv_headplane_cookie_secret }}"
   cookie_secure: true
   cookie_max_age: 86400 # 1 day
-  cookie_domain: "headscale.{{ base_domain }}"
+  cookie_domain: "headscale.{{ vps1.base_domain }}"
   data_path: "/var/lib/headplane"
 
 headscale:
-  url: "https://headscale.{{ base_domain }}"
+  url: "https://headscale.{{ vps1.base_domain }}"
   config_path: "/etc/headscale/config.yaml"
-  api_key: "{{ headplane_api_key }}"
+  api_key: "{{ vps1.priv_headplane_api_key }}"
 
 integration:
   agent:
@@ -27,10 +27,10 @@ integration:
     enabled: false
 
 oidc:
-  issuer: "https://auth.{{ base_domain }}"
+  issuer: "https://auth.{{ vps1.base_domain }}"
   token_endpoint_auth_method: "client_secret_post"
-  client_id: "{{ headscale_oidc_client_id }}"
-  client_secret: "{{ headscale_oidc_client_secret }}"
+  client_id: "{{ vps1.headscale_oidc_client_id }}"
+  client_secret: "{{ vps1.priv_headscale_oidc_client_secret }}"
   use_pkce: true
   disable_api_key_login: true
   profile_picture_source: "oidc"

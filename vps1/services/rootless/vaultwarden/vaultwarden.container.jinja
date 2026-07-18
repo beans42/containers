@@ -6,18 +6,18 @@ ContainerName=vaultwarden
 Image=docker.io/vaultwarden/server:alpine
 Pull=newer
 PublishPort=127.0.0.1:62297:80
-Environment="DOMAIN=https://vaultwarden.{{ base_domain }}"
-Environment="ADMIN_TOKEN={{ vaultwarden_admin_token }}"
+Environment="DOMAIN=https://vaultwarden.{{ vps1.base_domain }}"
+Environment="ADMIN_TOKEN={{ vps1.priv_vaultwarden_admin_token }}"
 Environment=SMTP_HOST=smtp.gmail.com
 Environment=SMTP_PORT=587
 Environment=SMTP_SECURITY=starttls
-Environment="SMTP_FROM={{ smtp_from }}"
-Environment="SMTP_USERNAME={{ smtp_username }}"
-Environment="SMTP_PASSWORD={{ smtp_password }}"
+Environment="SMTP_FROM={{ vps1.smtp_from }}"
+Environment="SMTP_USERNAME={{ vps1.priv_smtp_username }}"
+Environment="SMTP_PASSWORD={{ vps1.priv_smtp_password }}"
 Environment=SIGNUPS_ALLOWED=false
 Environment=PUSH_ENABLED=true
-Environment="PUSH_INSTALLATION_ID={{ vaultwarden_push_installation_id }}"
-Environment="PUSH_INSTALLATION_KEY={{ vaultwarden_push_installation_key }}"
+Environment="PUSH_INSTALLATION_ID={{ vps1.priv_vaultwarden_push_installation_id }}"
+Environment="PUSH_INSTALLATION_KEY={{ vps1.priv_vaultwarden_push_installation_key }}"
 Environment=SHOW_PASSWORD_HINT=false
 Volume=/home/core/infra-template/vps1/volumes/vaultwarden-data:/data:Z
 

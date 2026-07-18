@@ -1,13 +1,13 @@
 ---
-server_url: https://headscale.{{ base_domain }}
+server_url: https://headscale.{{ vps1.base_domain }}
 listen_addr: 0.0.0.0:8080
-trusted_proxies: [ {{ public_ipv4 }}/32, 169.254.1.2/32 ]
+trusted_proxies: [ {{ vps1.public_ipv4 }}/32, 169.254.1.2/32 ]
 
 noise:
   private_key_path: /var/lib/headscale/noise_private.key
 
 prefixes:
-  v4: {{ headscale_ipv4_prefix }}
+  v4: {{ vps1.headscale_ipv4_prefix }}
   v6: fd7a:115c:a1e0::/48
   allocation: sequential
 
@@ -21,8 +21,8 @@ derp:
     stun_listen_addr: "0.0.0.0:3480"
     private_key_path: /var/lib/headscale/derp_server_private.key
     automatically_add_embedded_derp_region: true
-    ipv4: {{ public_ipv4 }}
-    ipv6: {{ public_ipv6 }}
+    ipv4: {{ vps1.public_ipv4 }}
+    ipv6: {{ vps1.public_ipv6 }}
   urls: []
   paths: []
   auto_update_enabled: false
@@ -56,18 +56,18 @@ policy:
 
 dns:
   magic_dns: true
-  base_domain: {{ headscale_domain }}
+  base_domain: {{ vps1.headscale_domain }}
   override_local_dns: true
   nameservers:
-    global: ['{{ tailnet_ipv4 }}']
+    global: ['{{ vps1.tailnet_ipv4 }}']
     split: {}
-  search_domains: [ '{{ base_domain }}' ]
+  search_domains: [ '{{ vps1.base_domain }}' ]
   extra_records_path: "/etc/headscale/dns_records.json"
 
 oidc:
-  issuer: "https://auth.{{ base_domain }}"
-  client_id: "{{ headscale_oidc_client_id }}"
-  client_secret: "{{ headscale_oidc_client_secret }}"
+  issuer: "https://auth.{{ vps1.base_domain }}"
+  client_id: "{{ vps1.headscale_oidc_client_id }}"
+  client_secret: "{{ vps1.priv_headscale_oidc_client_secret }}"
   pkce:
     enabled: true
 

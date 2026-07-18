@@ -1,11 +1,11 @@
-realm=chat.{{ base_domain }}
+realm=chat.{{ vps1.base_domain }}
 listening-port=3479
 tls-listening-port=5350
 min-port=13000
 max-port=15999
 no-software-attribute
 use-auth-secret
-static-auth-secret={{ turn_secret }}
-cert=/etc/coturn/certs/wildcard_.{{ base_domain }}.crt
-pkey=/etc/coturn/certs/wildcard_.{{ base_domain }}.key
+static-auth-secret={{ vps1.priv_turn_secret }}
+cert=/etc/coturn/certs/wildcard_.{{ vps1.base_domain }}.crt
+pkey=/etc/coturn/certs/wildcard_.{{ vps1.base_domain }}.key
 log-file=stdout

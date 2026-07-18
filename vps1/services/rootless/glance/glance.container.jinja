@@ -6,7 +6,7 @@ ContainerName=glance
 Image=docker.io/glanceapp/glance
 Pull=newer
 PublishPort=127.0.0.1:50734:8080
-Environment="MY_SECRET_TOKEN={{ glance_secret_token }}"
+Environment="MY_SECRET_TOKEN={{ vps1.priv_glance_secret_token }}"
 Volume=./config:/app/config:Z
 Volume=./assets:/app/assets:Z
 Volume=/usr/share/zoneinfo/America/Toronto:/etc/localtime:ro

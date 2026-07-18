@@ -13,6 +13,7 @@ Timezone=America/Toronto
 Environment=TZ=America/Toronto
 Volume=/:/host:rslave
 Volume=/home/core/infra-template/vps1/volumes/cnc-data:/data:rshared
+Volume=/home/core/.config/sops/age/keys.txt:/home/ebrahim/.config/sops/age/keys.txt:ro
 PodmanArgs=--pid=host
 PodmanArgs=--cgroupns=host
 PodmanArgs=--userns=host

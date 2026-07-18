@@ -7,32 +7,32 @@ After=pocketid.container
 ContainerName=tinyauth
 Image=ghcr.io/tinyauthapp/tinyauth:v5-distroless
 Pull=newer
-AddHost=auth.{{ base_domain }}:host-gateway
+AddHost=auth.{{ vps1.base_domain }}:host-gateway
 PublishPort=127.0.0.1:19491:3000
-Environment="TINYAUTH_UI_TITLE={{ base_domain }}"
-Environment="TINYAUTH_APPURL=https://tinyauth.{{ base_domain }}"
+Environment="TINYAUTH_UI_TITLE={{ vps1.base_domain }}"
+Environment="TINYAUTH_APPURL=https://tinyauth.{{ vps1.base_domain }}"
 Environment=TINYAUTH_ANALYTICS_ENABLED=false
 Environment=TINYAUTH_AUTH_SESSIONEXPIRY=604800
 Environment=TINYAUTH_AUTH_SECURECOOKIE=true
 Environment=TINYAUTH_AUTH_USERSFILE=/users.txt
-Environment="TINYAUTH_AUTH_TRUSTEDPROXIES={{ public_ipv4 }}/32"
-Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_CLIENTID={{ tinyauth_oidc_client_id }}"
-Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_CLIENTSECRET={{ tinyauth_oidc_client_secret }}"
+Environment="TINYAUTH_AUTH_TRUSTEDPROXIES={{ vps1.public_ipv4 }}/32"
+Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_CLIENTID={{ vps1.tinyauth_oidc_client_id }}"
+Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_CLIENTSECRET={{ vps1.priv_tinyauth_oidc_client_secret }}"
 Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_SCOPES=openid email profile groups"
-Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_REDIRECTURL=https://tinyauth.{{ base_domain }}/api/oauth/callback/pocketid"
-Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_AUTHURL=https://auth.{{ base_domain }}/authorize"
-Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_TOKENURL=https://auth.{{ base_domain }}/api/oidc/token"
-Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_USERINFOURL=https://auth.{{ base_domain }}/api/oidc/userinfo"
+Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_REDIRECTURL=https://tinyauth.{{ vps1.base_domain }}/api/oauth/callback/pocketid"
+Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_AUTHURL=https://auth.{{ vps1.base_domain }}/authorize"
+Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_TOKENURL=https://auth.{{ vps1.base_domain }}/api/oidc/token"
+Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_USERINFOURL=https://auth.{{ vps1.base_domain }}/api/oidc/userinfo"
 Environment="TINYAUTH_OAUTH_PROVIDERS_POCKETID_NAME=Pocket ID"
-Environment="TINYAUTH_APPS_CASHAPI_CONFIG_DOMAIN=cash-api.{{ base_domain }}"
-Environment="TINYAUTH_APPS_CASHAPI_OAUTH_WHITELIST={{ tinyauth_admin_email }}"
-Environment="TINYAUTH_APPS_CASHAPI_USERS_ALLOW={{ tinyauth_admin_username }}"
-Environment="TINYAUTH_APPS_CFAPI_CONFIG_DOMAIN=cf-api.{{ base_domain }}"
-Environment="TINYAUTH_APPS_CFAPI_OAUTH_WHITELIST={{ tinyauth_admin_email }}"
-Environment="TINYAUTH_APPS_CFAPI_USERS_ALLOW={{ tinyauth_admin_username }}"
-Environment="TINYAUTH_APPS_GLANCE_CONFIG_DOMAIN=glance.{{ base_domain }}"
-Environment="TINYAUTH_APPS_GLANCE_OAUTH_WHITELIST={{ tinyauth_admin_email }}"
-Environment="TINYAUTH_APPS_GLANCE_USERS_ALLOW={{ tinyauth_admin_username }}"
+Environment="TINYAUTH_APPS_CASHAPI_CONFIG_DOMAIN=cash-api.{{ vps1.base_domain }}"
+Environment="TINYAUTH_APPS_CASHAPI_OAUTH_WHITELIST={{ vps1.priv_tinyauth_admin_email }}"
+Environment="TINYAUTH_APPS_CASHAPI_USERS_ALLOW={{ vps1.tinyauth_admin_username }}"
+Environment="TINYAUTH_APPS_CFAPI_CONFIG_DOMAIN=cf-api.{{ vps1.base_domain }}"
+Environment="TINYAUTH_APPS_CFAPI_OAUTH_WHITELIST={{ vps1.priv_tinyauth_admin_email }}"
+Environment="TINYAUTH_APPS_CFAPI_USERS_ALLOW={{ vps1.tinyauth_admin_username }}"
+Environment="TINYAUTH_APPS_GLANCE_CONFIG_DOMAIN=glance.{{ vps1.base_domain }}"
+Environment="TINYAUTH_APPS_GLANCE_OAUTH_WHITELIST={{ vps1.priv_tinyauth_admin_email }}"
+Environment="TINYAUTH_APPS_GLANCE_USERS_ALLOW={{ vps1.tinyauth_admin_username }}"
 Volume=./users.txt:/users.txt:ro,Z
 
 [Service]

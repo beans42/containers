@@ -13,6 +13,38 @@
     ]
   },
   "storage": {
+    "directories": [
+      {
+        "group": {
+          "name": "core"
+        },
+        "path": "/home/core/.config",
+        "user": {
+          "name": "core"
+        },
+        "mode": 448
+      },
+      {
+        "group": {
+          "name": "core"
+        },
+        "path": "/home/core/.config/sops",
+        "user": {
+          "name": "core"
+        },
+        "mode": 448
+      },
+      {
+        "group": {
+          "name": "core"
+        },
+        "path": "/home/core/.config/sops/age",
+        "user": {
+          "name": "core"
+        },
+        "mode": 448
+      }
+    ],
     "files": [
       {
         "overwrite": true,
@@ -102,7 +134,7 @@
   "systemd": {
     "units": [
       {
-        "contents": "[Unit]\nDescription=Layer host packages with rpm-ostree\nWants=network-online.target\nAfter=network-online.target\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree install -y --allow-inactive qemu-guest-agent git-core\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/systemctl --no-block reboot\n\n[Install]\nWantedBy=multi-user.target\n",
+        "contents": "[Unit]\nDescription=Layer host packages with rpm-ostree\nWants=network-online.target\nAfter=network-online.target\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree install -y --allow-inactive age git-core qemu-guest-agent\nExecStart=/bin/sh -eu -c 'sops_tmp=$$(mktemp); trap \"rm -f $$sops_tmp\" EXIT; sops_version=$$(curl -fsSIL -o /dev/null -w \"%%{url_effective}\" https://github.com/getsops/sops/releases/latest | sed \"s#.*/##\"); curl -fsSL \"https://github.com/getsops/sops/releases/download/$${sops_version}/sops-$${sops_version}.linux.amd64\" -o \"$$sops_tmp\"; install -D -m 0755 \"$$sops_tmp\" /usr/local/bin/sops'\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/systemctl --no-block reboot\n\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
         "name": "install-host-packages.service"
       },

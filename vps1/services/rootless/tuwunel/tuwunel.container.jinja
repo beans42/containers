@@ -7,7 +7,7 @@ After=pocketid.container caddy.container
 ContainerName=tuwunel
 Image=docker.io/jevolk/tuwunel:main-release-all-x86_64-v3-linux-gnu
 Pull=newer
-AddHost=auth.{{ base_domain }}:host-gateway
+AddHost=auth.{{ vps1.base_domain }}:host-gateway
 PublishPort=127.0.0.1:64565:8008
 Environment=TUWUNEL_CONFIG=/etc/tuwunel/tuwunel.toml
 Volume=/home/core/infra-template/vps1/volumes/tuwunel-data:/var/lib/tuwunel:Z

@@ -1,7 +1,7 @@
 port: 64531 # 7880
 bind_addresses: ['127.0.0.1']
 keys:
-  {{ livekit_key | tojson }}: {{ livekit_secret | tojson }}
+  {{ vps1.priv_livekit_key | tojson }}: {{ vps1.priv_livekit_secret | tojson }}
 rtc:
   tcp_port: 7881
   port_range_start: 50000

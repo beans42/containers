@@ -5,7 +5,7 @@ Description=Blocky Headscale hosts-file adapter
 ContainerName=blocky-tailscale
 Image=docker.io/oven/bun:alpine
 Pull=newer
-Environment=BASE_DOMAIN={{ base_domain }}
+Environment=BASE_DOMAIN={{ vps1.base_domain }}
 PublishPort=127.0.0.1:16932:16932
 Volume=.:/src:ro,Z
 Volume=/home/core/infra-template/vps1/volumes/blocky-tailscale-node:/app/node_modules:Z

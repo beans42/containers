@@ -9,8 +9,8 @@ Image=docker.io/spx01/blocky
 Pull=newer
 Network=pasta:--map-host-loopback,169.254.1.3
 AddHost=host.containers.internal:169.254.1.3
-PublishPort={{ tailnet_ipv4 }}:53:53
-PublishPort={{ tailnet_ipv4 }}:53:53/udp
+PublishPort={{ vps1.tailnet_ipv4 }}:53:53
+PublishPort={{ vps1.tailnet_ipv4 }}:53:53/udp
 Volume=./additional_allow.txt:/app/additional_allow.txt:ro,Z
 Volume=./additional_deny.txt:/app/additional_deny.txt:ro,Z
 Volume=./config.yml:/app/config.yml:ro,Z
@@ -20,7 +20,7 @@ Volume=/home/core/infra-template/vps1/volumes/blocky-logs:/logs:U,Z
 TimeoutStartSec=15min
 ExecStartPre=/usr/bin/mkdir -p /home/core/infra-template/vps1/volumes/blocky-logs
 # tailscale-client is a rootful system unit, wait for its interface instead
-ExecStartPre=/bin/sh -c "until /usr/sbin/ip -4 addr show dev tailscale0 2>/dev/null | /usr/bin/grep -q '{{ tailnet_ipv4 | replace(".", "\\.") }}/'; do /usr/bin/sleep 1; done"
+ExecStartPre=/bin/sh -c "until /usr/sbin/ip -4 addr show dev tailscale0 2>/dev/null | /usr/bin/grep -q '{{ vps1.tailnet_ipv4 | replace(".", "\\.") }}/'; do /usr/bin/sleep 1; done"
 
 [Install]
 WantedBy=default.target

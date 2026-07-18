@@ -1,6 +1,6 @@
 #!/bin/sh
 mkdir -p /tmp/croc-config
 CROC_CONFIG_DIR=/tmp/croc-config \
-	CROC_SECRET="{{ croc_secret }}" \
-	CROC_PASS="{{ croc_password }}" \
+	CROC_SECRET="{{ shared.priv_croc_secret }}" \
+	CROC_PASS="{{ shared.priv_croc_password }}" \
 	croc-bin --disable-clipboard --relay "vps1.ebra.dev:53889" "$@"

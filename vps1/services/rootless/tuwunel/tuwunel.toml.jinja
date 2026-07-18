@@ -1,24 +1,24 @@
 [global]
-server_name = "{{ base_domain }}"
+server_name = "{{ vps1.base_domain }}"
 address = ["0.0.0.0"]
 port = 8008
 turn_uris = [
-  "turn:chat-api.{{ base_domain }}:3479?transport=udp",
-  "turn:chat-api.{{ base_domain }}:3479?transport=tcp",
-  "turns:chat-api.{{ base_domain }}:5350?transport=tcp"
+  "turn:chat-api.{{ vps1.base_domain }}:3479?transport=udp",
+  "turn:chat-api.{{ vps1.base_domain }}:3479?transport=tcp",
+  "turns:chat-api.{{ vps1.base_domain }}:5350?transport=tcp"
 ]
-turn_secret = "{{ turn_secret }}"
+turn_secret = "{{ vps1.priv_turn_secret }}"
 
 [global.well_known]
-client = "https://chat.{{ base_domain }}"
+client = "https://chat.{{ vps1.base_domain }}"
 
 [[global.identity_provider]]
 brand = "pocketid"
 name = "Pocket ID"
 
-client_id = "{{ tuwunel_oidc_client_id }}"
-client_secret = "{{ tuwunel_oidc_client_secret }}"
-issuer_url = "https://auth.{{ base_domain }}"
-callback_url = "https://chat.{{ base_domain }}/_matrix/client/unstable/login/sso/callback/{{ tuwunel_oidc_client_id }}"
+client_id = "{{ vps1.tuwunel_oidc_client_id }}"
+client_secret = "{{ vps1.priv_tuwunel_oidc_client_secret }}"
+issuer_url = "https://auth.{{ vps1.base_domain }}"
+callback_url = "https://chat.{{ vps1.base_domain }}/_matrix/client/unstable/login/sso/callback/{{ vps1.tuwunel_oidc_client_id }}"
 scope = ["openid", "profile", "email"]
 userid_claims = ["preferred_username", "sub"]

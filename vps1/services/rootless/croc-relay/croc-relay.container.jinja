@@ -7,7 +7,7 @@ Image=docker.io/schollz/croc
 Pull=newer
 PublishPort=53889-53890:53889-53890
 Environment=CROC_PORTS=53889,53890
-Environment="CROC_PASS={{ croc_password }}"
+Environment="CROC_PASS={{ shared.priv_croc_password }}"
 
 [Service]
 TimeoutStartSec=15min

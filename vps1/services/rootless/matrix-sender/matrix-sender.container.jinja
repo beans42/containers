@@ -7,12 +7,12 @@ After=tuwunel.container caddy.container
 ContainerName=matrix-sender
 Image=docker.io/oven/bun:slim
 Pull=newer
-AddHost=chat.{{ base_domain }}:host-gateway
+AddHost=chat.{{ vps1.base_domain }}:host-gateway
 PublishPort=127.0.0.1:52498:8080
-Environment="MATRIX_HOMESERVER=https://chat.{{ base_domain }}"
-Environment="MATRIX_USERNAME={{ matrix_username }}"
-Environment="MATRIX_PASSWORD={{ matrix_password }}"
-Environment="MATRIX_RECOVERY_KEY={{ matrix_recovery_key }}"
+Environment="MATRIX_HOMESERVER=https://chat.{{ vps1.base_domain }}"
+Environment="MATRIX_USERNAME={{ vps1.matrix_username }}"
+Environment="MATRIX_PASSWORD={{ vps1.priv_matrix_password }}"
+Environment="MATRIX_RECOVERY_KEY={{ vps1.priv_matrix_recovery_key }}"
 Volume=.:/src:ro,Z
 Volume=./entrypoint.sh:/usr/local/bin/entrypoint.sh:ro,Z
 Volume=/home/core/infra-template/vps1/volumes/matrix-sender-node:/app/node_modules:Z

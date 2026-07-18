@@ -11,13 +11,13 @@ Network=host
 AddDevice=/dev/net/tun
 AddCapability=NET_ADMIN NET_RAW
 Volume=/home/core/infra-template/vps1/volumes/tailscale-client-data:/var/lib/tailscale:Z
-Environment="TS_AUTHKEY={{ tailscale_auth_key }}"
+Environment="TS_AUTHKEY={{ vps1.priv_tailscale_auth_key }}"
 Environment=TS_STATE_DIR=/var/lib/tailscale
 Environment=TS_USERSPACE=false
 Environment=TS_AUTH_ONCE=true
-Environment=TS_HOSTNAME=peer-{{ hostname }}
+Environment=TS_HOSTNAME=peer-{{ vps1.hostname }}
 Environment=TS_DEBUG_FIREWALL_MODE=nftables
-Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ base_domain }} --advertise-exit-node"
+Environment="TS_EXTRA_ARGS=--login-server=https://headscale.{{ vps1.base_domain }} --advertise-exit-node"
 
 [Service]
 TimeoutStartSec=15min

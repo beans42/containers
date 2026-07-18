@@ -3,7 +3,9 @@ FROM docker.io/artixlinux/artixlinux:base-dinit
 RUN pacman -Syu --noconfirm --needed \
 	base-devel \
 	btop \
+	bubblewrap \
 	eza \
+	fuse-overlayfs \
 	git \
 	less \
 	ncdu \
@@ -20,6 +22,8 @@ RUN pacman -Syu --noconfirm --needed \
 
 RUN groupadd -g 1000 ebrahim \
 	&& useradd -m -u 1000 -g 1000 -G wheel -s /bin/bash ebrahim \
+	&& setcap cap_setuid=ep /usr/bin/newuidmap \
+	&& setcap cap_setgid=ep /usr/bin/newgidmap \
 	&& printf '%%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n' > /etc/sudoers.d/10-wheel-nopasswd
 
 RUN printf '%s\n' \
@@ -50,9 +54,19 @@ COPY --chown=ebrahim:ebrahim shared/ssh_config /home/ebrahim/.ssh/config
 COPY --chown=ebrahim:ebrahim shared/home/ /home/ebrahim/
 COPY --chown=ebrahim:ebrahim home/ /home/ebrahim/
 RUN install -d -m 0700 -o ebrahim -g ebrahim /home/ebrahim/.ssh \
-	&& printf '%s\n' '{{ ssh_authorized_key }}' > /home/ebrahim/.ssh/authorized_keys \
+	&& printf '%s\n' '{{ shared.ssh_authorized_key }}' > /home/ebrahim/.ssh/authorized_keys \
 	&& chown ebrahim:ebrahim /home/ebrahim/.ssh/authorized_keys \
 	&& chmod 0600 /home/ebrahim/.ssh/authorized_keys /home/ebrahim/.ssh/config \
+	&& install -d -m 0700 -o ebrahim -g ebrahim /home/ebrahim/.config/containers \
+	&& printf '%s\n' \
+		'[storage]' \
+		'driver = "overlay"' \
+		'[storage.options.overlay]' \
+		'mount_program = "/usr/bin/fuse-overlayfs"' \
+		> /home/ebrahim/.config/containers/storage.conf \
+	&& chown ebrahim:ebrahim /home/ebrahim/.config/containers/storage.conf \
+	&& chmod 0600 /home/ebrahim/.config/containers/storage.conf \
+	&& install -d -m 0700 -o ebrahim -g ebrahim /home/ebrahim/.config/sops/age \
 	&& install -d -m 0755 -o ebrahim -g ebrahim /home/ebrahim/ssl \
 	&& ln -s /host/home/core/infra-template /home/ebrahim/infra-template \
 	&& ln -s /host/home/core/infra-template/vps1/volumes/caddy-data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/wildcard_.ebra.dev/wildcard_.ebra.dev.crt /home/ebrahim/ssl/fullchain.pem \
@@ -67,6 +81,21 @@ RUN croc_tmp=$(mktemp -d) \
 		| tar -xz -C "$croc_tmp" \
 	&& install -D -m 0755 -o ebrahim -g ebrahim "$croc_tmp/croc" /home/ebrahim/scripts/croc-bin \
 	&& rm -rf "$croc_tmp"
+
+RUN age_tmp=$(mktemp -d) \
+	&& age_version=$(curl -fsSIL -o /dev/null -w '%{url_effective}' https://github.com/FiloSottile/age/releases/latest | sed 's#.*/##') \
+	&& curl -fsSL "https://github.com/FiloSottile/age/releases/download/${age_version}/age-${age_version}-linux-amd64.tar.gz" \
+		| tar -xz -C "$age_tmp" \
+	&& for binary in age age-inspect age-keygen; do \
+		install -D -m 0755 -o ebrahim -g ebrahim "$age_tmp/age/$binary" "/home/ebrahim/scripts/$binary"; \
+	done \
+	&& rm -rf "$age_tmp"
+
+RUN sops_version=$(curl -fsSIL -o /dev/null -w '%{url_effective}' https://github.com/getsops/sops/releases/latest | sed 's#.*/##') \
+	&& curl -fsSL "https://github.com/getsops/sops/releases/download/${sops_version}/sops-${sops_version}.linux.amd64" \
+		-o /home/ebrahim/scripts/sops \
+	&& chown ebrahim:ebrahim /home/ebrahim/scripts/sops \
+	&& chmod 0755 /home/ebrahim/scripts/sops
 
 RUN git clone --depth=1 https://aur.archlinux.org/yay-bin.git /tmp/yay-bin \
 	&& chown -R ebrahim:ebrahim /tmp/yay-bin \

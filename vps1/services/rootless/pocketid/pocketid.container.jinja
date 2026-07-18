@@ -8,8 +8,8 @@ ContainerName=pocketid
 Image=ghcr.io/pocket-id/pocket-id:v2-distroless
 Pull=newer
 PublishPort=127.0.0.1:18467:1411
-Environment=APP_URL=https://auth.{{ base_domain }}
-Environment=ENCRYPTION_KEY={{ pocketid_encryption_key }}
+Environment=APP_URL=https://auth.{{ vps1.base_domain }}
+Environment=ENCRYPTION_KEY={{ vps1.priv_pocketid_encryption_key }}
 Environment=TRUST_PROXY=true
 Volume=/home/core/infra-template/vps1/volumes/pocketid-data:/app/data:U,Z
 HealthCmd=["/app/pocket-id", "healthcheck"]

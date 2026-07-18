@@ -5,7 +5,7 @@ passwd:
   users:
     - name: core
       ssh_authorized_keys:
-        - {{ ssh_authorized_key }}
+        - {{ shared.ssh_authorized_key }}
 
 systemd:
   units:
@@ -22,7 +22,8 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive qemu-guest-agent git-core
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive age git-core qemu-guest-agent
+        ExecStart=/bin/sh -eu -c 'sops_tmp=$$(mktemp); trap "rm -f $$sops_tmp" EXIT; sops_version=$$(curl -fsSIL -o /dev/null -w "%%{url_effective}" https://github.com/getsops/sops/releases/latest | sed "s#.*/##"); curl -fsSL "https://github.com/getsops/sops/releases/download/$${sops_version}/sops-$${sops_version}.linux.amd64" -o "$$sops_tmp"; install -D -m 0755 "$$sops_tmp" /usr/local/bin/sops'
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
 
@@ -45,18 +46,37 @@ systemd:
         User=core
         Group=core
         WorkingDirectory=/home/core
-        ExecStart=/usr/bin/git clone "{{ containers_git_repo }}" /home/core/infra-template
+        ExecStart=/usr/bin/git clone "{{ shared.containers_git_repo }}" /home/core/infra-template
 
         [Install]
         WantedBy=multi-user.target
 
 storage:
+  directories:
+    - path: /home/core/.config
+      mode: 0700
+      user:
+        name: core
+      group:
+        name: core
+    - path: /home/core/.config/sops
+      mode: 0700
+      user:
+        name: core
+      group:
+        name: core
+    - path: /home/core/.config/sops/age
+      mode: 0700
+      user:
+        name: core
+      group:
+        name: core
   files:
     - path: /etc/hostname
       overwrite: true
       mode: 0644
       contents:
-        inline: {{ hostname }}
+        inline: {{ vps1.hostname }}
     - path: /etc/hosts
       overwrite: true
       mode: 0644
@@ -64,8 +84,8 @@ storage:
         inline: |
           127.0.0.1        localhost
           ::1              localhost
-          {{ public_ipv4 }}   {{ hostname }}.{{ base_domain }}
-          {{ public_ipv6 }}   {{ hostname }}.{{ base_domain }}
+          {{ vps1.public_ipv4 }}   {{ vps1.hostname }}.{{ vps1.base_domain }}
+          {{ vps1.public_ipv6 }}   {{ vps1.hostname }}.{{ vps1.base_domain }}
     - path: /etc/sysctl.d/90-containers.conf
       mode: 0644
       contents:
@@ -91,7 +111,7 @@ storage:
 
           [ipv6]
           method=manual
-          address1={{ public_ipv6 }}/64,fe80::1
+          address1={{ vps1.public_ipv6 }}/64,fe80::1
           ignore-auto-dns=true
           dns=2606:4700:4700::1111;2606:4700:4700::1001;
     - path: /etc/systemd/zram-generator.conf

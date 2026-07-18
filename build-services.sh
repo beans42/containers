@@ -9,14 +9,15 @@ repo_dir=$(dirname "$script_path")
 host_name=$1
 host_dir="$repo_dir/$host_name"
 current_host=$(cat /etc/hostname)
+secrets_file="$repo_dir/secrets.yaml"
+age_key_file="$HOME/.config/sops/age/keys.txt"
 
 [ "$host_name" = "$current_host" ] || { echo "refusing to deploy $host_name on $current_host" >&2; exit 1; }
 
 [ -d "$host_dir" ] || { echo "host directory not found: $host_dir" >&2; exit 1; }
-[ -f "$repo_dir/answers.yml" ] || { echo "missing shared answers: $repo_dir/answers.yml" >&2; exit 1; }
-[ -f "$host_dir/answers.yml" ] || { echo "missing $host_name answers: $host_dir/answers.yml" >&2; exit 1; }
+[ -f "$secrets_file" ] || { echo "missing encrypted secrets: $secrets_file" >&2; exit 1; }
+[ -f "$age_key_file" ] || { echo "missing age identity: $age_key_file" >&2; exit 1; }
 
-data_file=$(mktemp)
 dest="$host_dir/services-dist"
 
 sync_tree() {
@@ -102,12 +103,6 @@ relabel_rootless_mounts() {
 	done
 }
 
-{
-	cat "$repo_dir/answers.yml"
-	printf '\n'
-	cat "$host_dir/answers.yml"
-} > "$data_file"
-
 printf '%s\n' "_envops:" "  undefined: jinja2.StrictUndefined" |
 	tee "$host_dir/services/copier.yml" "$repo_dir/shared/copier.yml" >/dev/null
 
@@ -115,10 +110,16 @@ rm -rf "$dest"
 podman run --rm --interactive \
 	--security-opt label=disable \
 	--volume "$repo_dir:/work" \
-	--volume "$data_file:/answers.yml:ro" \
+	--volume "$secrets_file:/run/secrets/secrets.yaml:ro" \
+	--volume "$age_key_file:/run/secrets/age-keys.txt:ro" \
 	--workdir /work \
 	docker.io/library/python:alpine \
 	sh -eu -c '
+		apk add --no-cache age sops
+		umask 077
+		SOPS_AGE_KEY_FILE=/run/secrets/age-keys.txt \
+			sops --decrypt /run/secrets/secrets.yaml > /tmp/secrets.yaml
+		sed -i -E "s/^([[:space:]]*)enc_priv_([[:alnum:]_]+):/\1priv_\2:/" /tmp/secrets.yaml
 		if [ ! -x .venv/bin/python ] || ! .venv/bin/python -c "import sys" >/dev/null 2>&1; then
 			rm -rf .venv
 			python -m venv .venv
@@ -126,10 +127,10 @@ podman run --rm --interactive \
 		if ! .venv/bin/python -m pip show copier >/dev/null 2>&1; then
 			.venv/bin/python -m pip install copier
 		fi
-		.venv/bin/copier copy --quiet --data-file /answers.yml "$1/services" "$1/services-dist"
-		.venv/bin/copier copy --quiet --data-file /answers.yml shared "$1/services-dist/root/cnc/shared"
+		.venv/bin/copier copy --quiet --data-file /tmp/secrets.yaml "$1/services" "$1/services-dist"
+		.venv/bin/copier copy --quiet --data-file /tmp/secrets.yaml shared "$1/services-dist/root/cnc/shared"
 	' sh "$host_name"
-rm -f "$data_file" "$host_dir/services/copier.yml" "$repo_dir/shared/copier.yml"
+rm -f "$host_dir/services/copier.yml" "$repo_dir/shared/copier.yml"
 
 root_quadlet_dir="/etc/containers/systemd/${host_name}-root"
 sudo_sync_tree "$dest/root" "$root_quadlet_dir"

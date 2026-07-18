@@ -7,13 +7,13 @@ After=tuwunel-livekit.container
 ContainerName=tuwunel-jwt
 Image=ghcr.io/element-hq/lk-jwt-service
 Pull=newer
-AddHost=chat-livekit.{{ base_domain }}:host-gateway
-AddHost=chat.{{ base_domain }}:host-gateway
+AddHost=chat-livekit.{{ vps1.base_domain }}:host-gateway
+AddHost=chat.{{ vps1.base_domain }}:host-gateway
 PublishPort=127.0.0.1:60356:8080
-Environment="LIVEKIT_FULL_ACCESS_HOMESERVERS={{ base_domain }}"
-Environment="LIVEKIT_URL=wss://chat-livekit.{{ base_domain }}/livekit/sfu"
-Environment="LIVEKIT_KEY={{ livekit_key }}"
-Environment="LIVEKIT_SECRET={{ livekit_secret }}"
+Environment="LIVEKIT_FULL_ACCESS_HOMESERVERS={{ vps1.base_domain }}"
+Environment="LIVEKIT_URL=wss://chat-livekit.{{ vps1.base_domain }}/livekit/sfu"
+Environment="LIVEKIT_KEY={{ vps1.priv_livekit_key }}"
+Environment="LIVEKIT_SECRET={{ vps1.priv_livekit_secret }}"
 
 [Service]
 TimeoutStartSec=15min
