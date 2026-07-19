@@ -120,6 +120,7 @@ podman run --rm --interactive \
 		SOPS_AGE_KEY_FILE=/run/secrets/age-keys.txt \
 			sops --decrypt /run/secrets/secrets.yaml > /tmp/secrets.yaml
 		sed -i -E "s/^([[:space:]]*)enc_priv_([[:alnum:]_]+):/\1priv_\2:/" /tmp/secrets.yaml
+		umask 022
 		if [ ! -x .venv/bin/python ] || ! .venv/bin/python -c "import sys" >/dev/null 2>&1; then
 			rm -rf .venv
 			python -m venv .venv
