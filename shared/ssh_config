@@ -1,20 +1,35 @@
 Host vps1
-  HostName vps1.ebra.dev
-  User core
-  ForwardAgent yes
+	HostName vps1.ebra.dev
+	User core
+	ForwardAgent yes
 
 Host vps1c
-  HostName vps1.ebra.dev
-  Port 222
-  User ebrahim
-  ForwardAgent yes
+	HostName vps1.ebra.dev
+	Port 222
+	User ebrahim
+	ForwardAgent yes
 
 Host homelab
-  HostName 100.64.0.2
-  User ebrahim
-  ForwardAgent yes
+	HostName 100.64.0.2
+	User ebrahim
+	ForwardAgent yes
 
 Host offsite
-  HostName 100.64.0.6
-  User armtix
-  ForwardAgent yes
+	HostName 100.64.0.6
+	User armtix
+	ForwardAgent yes
+
+Host pc
+	HostName 100.64.0.3
+	User Ebrahim
+	ForwardAgent yes
+
+Host pc-qemu
+	HostName 100.64.0.21
+	User ebrahim
+	ForwardAgent yes
+
+Host mba-utm
+	HostName 100.64.0.22
+	User ebrahim
+	ForwardAgent yes
